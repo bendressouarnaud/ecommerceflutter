@@ -4,29 +4,34 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'beanproduit.dart';
 
 class CarouselInterface extends StatelessWidget{
-  const CarouselInterface({super.key, this.liste});
+  const CarouselInterface({super.key, required this.liste});
 
-  final List<Produit>? liste;
+  final List<Produit> liste;
 
   @override
   Widget build(BuildContext context){
 
-    return CarouselSlider(
-      options: CarouselOptions(height: 400.0),
-      items: [1,2,3,4,5].map((i) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                decoration: BoxDecoration(
-                    color: Colors.amber
-                ),
-                child: Text('text $i', style: TextStyle(fontSize: 16.0),)
-            );
-          },
-        );
-      }).toList(),
+    return CarouselSlider.builder(
+      itemCount: liste.length,
+      itemBuilder: (BuildContext context, int itemIndex, int t) => Container(
+        child: Container(
+          margin: const EdgeInsets.all(6.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+            image: const DecorationImage(
+              image: NetworkImage("https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/17fa4813-b5f5-4847-a7f6-5bbaee6ad505.jpg?alt=media"),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+      options: CarouselOptions(
+        autoPlay: true,
+        enlargeCenterPage: true,
+        viewportFraction: 0.9,
+        aspectRatio: 1.0,
+        initialPage: 0,
+      ),
     );
 
     /*return CarouselSlider(

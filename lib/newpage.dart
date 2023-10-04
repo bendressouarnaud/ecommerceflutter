@@ -117,7 +117,7 @@ class _NewsPageState extends State<NewsPage> {
               //print("Second future result: ${snapshot.data[1]}");
               return Column(
                 children: [
-                  const CarouselInterface(),
+                  CarouselInterface(liste: pt),
                   Container(
                     alignment: Alignment.topLeft,
                     margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
