@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -8,6 +9,7 @@ class CarouselInterface extends StatelessWidget{
   const CarouselInterface({super.key, required this.liste});
 
   final List<Produit> liste;
+  // https://pub.dev/packages/cached_network_image
 
   @override
   Widget build(BuildContext context){
@@ -18,7 +20,7 @@ class CarouselInterface extends StatelessWidget{
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           image: DecorationImage(
-            image: NetworkImage("https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[itemIndex].lienweb}?alt=media"),
+            image: CachedNetworkImage("https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[itemIndex].lienweb}?alt=media"),
             fit: BoxFit.cover,
           ),
         ),
