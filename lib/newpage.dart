@@ -41,7 +41,7 @@ class _NewsPageState extends State<NewsPage> {
 
   // Get Products :
   Future<List<Produit>> produitLoading() async {
-    final url = Uri.parse('http://10.1.4.102:8080/backendcommerce/getmobileAllProduits');
+    final url = Uri.parse('http://192.168.35.80:8080/backendcommerce/getmobileAllProduits');
     Response response = await get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
@@ -61,7 +61,7 @@ class _NewsPageState extends State<NewsPage> {
 
   // Get Recent Added Products :
   Future<List<Beanarticledetail>> recentProduitLoading() async {
-    final url = Uri.parse('http://10.1.4.102:8080/backendcommerce/getmobilerecentarticles');
+    final url = Uri.parse('http://192.168.35.80:8080/backendcommerce/getmobilerecentarticles');
     final response = await get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
@@ -121,7 +121,7 @@ class _NewsPageState extends State<NewsPage> {
                   Container(
                     alignment: Alignment.topLeft,
                     margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    child: Text("Produit >>> ${bl.length}",
+                    child: const Text("Produit",
                       textAlign: TextAlign.start,
                       style: TextStyle(
                           fontSize: 17,
@@ -150,7 +150,7 @@ class _NewsPageState extends State<NewsPage> {
                   SizedBox(
                     height: 510,
                     width: MediaQuery.of(context).size.width,
-                    child: const GridViewLastProduct(),
+                    child: GridViewLastProduct(liste: bl),
                   )
                 ],
               );

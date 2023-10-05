@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import 'beanproduit.dart';
+import 'httpbeans/beanarticledetail.dart';
 
 class CarouselInterface extends StatelessWidget{
   const CarouselInterface({super.key, required this.liste});
@@ -10,71 +11,18 @@ class CarouselInterface extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-
     return CarouselSlider.builder(
       itemCount: liste.length,
       itemBuilder: (BuildContext context, int itemIndex, int t) => Container(
-        child: Container(
-          margin: const EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            image: const DecorationImage(
-              image: NetworkImage("https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/17fa4813-b5f5-4847-a7f6-5bbaee6ad505.jpg?alt=media"),
-              fit: BoxFit.cover,
-            ),
+        margin: const EdgeInsets.all(6.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          image: DecorationImage(
+            image: NetworkImage("https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[itemIndex].lienweb}?alt=media"),
+            fit: BoxFit.cover,
           ),
         ),
       ),
-      options: CarouselOptions(
-        autoPlay: true,
-        enlargeCenterPage: true,
-        viewportFraction: 0.9,
-        aspectRatio: 1.0,
-        initialPage: 0,
-      ),
-    );
-
-    /*return CarouselSlider(
-      items: [
-        //1st Image of Slider
-        Container(
-          margin: EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            image: const DecorationImage(
-              image: NetworkImage("https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/17fa4813-b5f5-4847-a7f6-5bbaee6ad505.jpg?alt=media"),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-
-        //2nd Image of Slider
-        Container(
-          margin: EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            image: const DecorationImage(
-              image: NetworkImage("https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/54929894-5db4-4157-be07-cbd3b97af70b.jpg?alt=media"),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-
-        //3nd Image of Slider
-        Container(
-          margin: EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            image: const DecorationImage(
-              image: NetworkImage("https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/ac1a9855-da04-45d6-abeb-f1fb540a331c.jpeg?alt=media"),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-
-      ],
-
-      //Slider Container properties
       options: CarouselOptions(
         height: 200.0,
         enlargeCenterPage: true,
@@ -85,7 +33,7 @@ class CarouselInterface extends StatelessWidget{
         autoPlayAnimationDuration: const Duration(milliseconds: 1200),
         viewportFraction: 0.8,
       ),
-    );*/
+    );
   }
 }
 
@@ -102,6 +50,7 @@ class ProduitInterface extends StatelessWidget{
             margin: const EdgeInsets.all(10),
             width: 130,
             height: 120,
+            color: Colors.red,
             child: Column(
               children: [
                 Container(
@@ -118,7 +67,9 @@ class ProduitInterface extends StatelessWidget{
                       )
                   ),
                 ),
-                const Text("Viande",
+                const Expanded(
+                    child: Text("Viande",
+                    )
                 )
               ],
             ),
@@ -205,113 +156,60 @@ class ProduitInterface extends StatelessWidget{
 
 
 class GridViewLastProduct extends StatelessWidget{
-  const GridViewLastProduct({super.key});
+  const GridViewLastProduct({super.key, required this.liste});
 
   // Attributes  :
   final customColor = const Color(0xFFDEDDE3);
+  final List<Beanarticledetail> liste;
 
 
   @override
-  Widget build(BuildContext context){
-    return GridView.count(
-      primary: false,
-      padding: const EdgeInsets.all(10),
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      crossAxisCount: 2,
-      childAspectRatio: 0.85,
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(3),
-          color: customColor,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                width: MediaQuery.of(context).size.width,
-                height: 160,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/547a5f22-9600-417d-8585-b2513af99cde.png?alt=media"
-                        ),
-                        fit: BoxFit.fill
-                    )
+  Widget build(BuildContext context) {
+    return GridView.builder(
+        padding: const EdgeInsets.all(10),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            childAspectRatio: 0.85,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10),
+        itemCount: liste.length,
+        itemBuilder: (BuildContext ctx, index) {
+          return Container(
+            padding: const EdgeInsets.all(3),
+            color: customColor,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  width: MediaQuery.of(context).size.width,
+                  height: 160,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[index].lienweb}?alt=media"
+                          ),
+                          fit: BoxFit.fill
+                      )
+                  ),
                 ),
-              ),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Kunding PLus Tea",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold
-                    )
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(liste[index].libelle.length > 23 ?
+                   "${liste[index].libelle.substring(0,17)} ..." : liste[index].libelle,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold
+                      )
+                  ),
                 ),
-              ),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text("8250",
-                  textAlign: TextAlign.start,
-                ),
-              )
-            ],
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(3),
-          color: customColor,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                width: MediaQuery.of(context).size.width,
-                height: 160,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/adb285fb-f9c8-4987-8f06-37848eca6ade.png?alt=media"
-                        ),
-                        fit: BoxFit.fill
-                    )
-                ),
-              ),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Wake JQQ Fresh Drink",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold
-                    )
-                ),
-              ),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text("9600",
-                  textAlign: TextAlign.start,
-                ),
-              )
-            ],
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[300],
-          child: const Text('Sound of screams but the'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[400],
-          child: const Text('Who scream'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[500],
-          child: const Text('Revolution is coming...'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[600],
-          child: const Text('Revolution, they...'),
-        ),
-      ],
-    );
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("${liste[index].prix} FCFA",
+                    textAlign: TextAlign.start,
+                  ),
+                )
+              ],
+            ),
+          );
+        });
   }
 }
