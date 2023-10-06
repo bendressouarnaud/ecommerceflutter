@@ -8,6 +8,7 @@ import 'carouselcustom.dart';
 import 'constants.dart';
 import 'package:http/http.dart';
 
+import 'ecrancompte.dart';
 import 'httpbeans/beanarticledetail.dart';
 
 class NewsPage extends StatefulWidget {
@@ -23,6 +24,7 @@ class _NewsPageState extends State<NewsPage> {
   late Future<List<Beanarticledetail>> futureBeanarticle;
   late bool _isLoading;
   int callNumber = 0;
+  int currentPageIndex = 0;
 
 
   // M e t h o d  :
@@ -41,7 +43,7 @@ class _NewsPageState extends State<NewsPage> {
 
   // Get Products :
   Future<List<Produit>> produitLoading() async {
-    final url = Uri.parse('http://192.168.35.80:8080/backendcommerce/getmobileAllProduits');
+    final url = Uri.parse('http://10.1.4.102:8080/backendcommerce/getmobileAllProduits');
     Response response = await get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
@@ -61,7 +63,7 @@ class _NewsPageState extends State<NewsPage> {
 
   // Get Recent Added Products :
   Future<List<Beanarticledetail>> recentProduitLoading() async {
-    final url = Uri.parse('http://192.168.35.80:8080/backendcommerce/getmobilerecentarticles');
+    final url = Uri.parse('http://10.1.4.102:8080/backendcommerce/getmobilerecentarticles');
     final response = await get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
@@ -84,6 +86,31 @@ class _NewsPageState extends State<NewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        indicatorColor: Colors.amber[300],
+        selectedIndex: currentPageIndex,
+        destinations: const [
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Accueil',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.shopping_basket),
+            label: 'Commande',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.school),
+            icon: Icon(Icons.account_box),
+            label: 'Compte',
+          ),
+        ],
+      ),
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -105,7 +132,76 @@ class _NewsPageState extends State<NewsPage> {
           )
         ],
       ),
-      body: SingleChildScrollView(
+      body: <Widget>[
+        SingleChildScrollView(
+          child: FutureBuilder(
+            future: Future.wait([produitLoading(), recentProduitLoading()]),
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                List<Produit> pt =  snapshot.data[0];
+                List<Beanarticledetail> bl =  snapshot.data[1];
+                return Column(
+                  children: [
+                    CarouselInterface(liste: pt),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: const Text("Produit",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 170,
+                      child: ProduitInterface(liste: pt),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: const Text("Derniers produits ajoutés",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 510,
+                      width: MediaQuery.of(context).size.width,
+                      child: GridViewLastProduct(liste: bl),
+                    )
+                  ],
+                );
+              } else {
+                return ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: 5,
+                  itemBuilder: (context, index) => const NewsCardSkelton(),
+                  separatorBuilder: (context, index) =>
+                  const SizedBox(height: defaultPadding),
+                );
+              }
+            },
+          ),
+        ),
+        Container(
+          color: Colors.red,
+          alignment: Alignment.center,
+          child: const Text('Page 1'),
+        ),
+        const EcranCompte(),
+
+      ][currentPageIndex]
+      /*SingleChildScrollView(
         child: FutureBuilder(
           future: Future.wait([produitLoading(), recentProduitLoading()]),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -113,8 +209,6 @@ class _NewsPageState extends State<NewsPage> {
               List<Produit> pt =  snapshot.data[0];
               List<Beanarticledetail> bl =  snapshot.data[1];
 
-              //print("First future result: ${snapshot.data[0]}");
-              //print("Second future result: ${snapshot.data[1]}");
               return Column(
                 children: [
                   CarouselInterface(liste: pt),
@@ -126,6 +220,7 @@ class _NewsPageState extends State<NewsPage> {
                       style: TextStyle(
                           fontSize: 17,
                           fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
                           color: Colors.black
                       ),
                     ),
@@ -133,7 +228,7 @@ class _NewsPageState extends State<NewsPage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 170,
-                    child: ProduitInterface(),
+                    child: ProduitInterface(liste: pt),
                   ),
                   Container(
                     alignment: Alignment.topLeft,
@@ -143,6 +238,7 @@ class _NewsPageState extends State<NewsPage> {
                       style: TextStyle(
                           fontSize: 17,
                           fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
                           color: Colors.black
                       ),
                     ),
@@ -165,7 +261,7 @@ class _NewsPageState extends State<NewsPage> {
             }
           },
         ),
-      ),
+      ),*/
     );
   }
 }
