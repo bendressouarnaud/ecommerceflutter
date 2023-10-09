@@ -77,7 +77,7 @@ class _NewEcranState extends State<EcranCompte> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.deepOrange[400]
                             ),
-                            child: const Text("COMPTE",
+                            child: const Text("CONNECTEZ-VOUS",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
