@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:newecommerce/beanproduit.dart';
+import 'package:newecommerce/blocs/user_bloc.dart';
 import 'package:newecommerce/skeleton.dart';
 import 'package:shimmer/shimmer.dart';
 import 'carouselcustom.dart';
@@ -9,6 +10,7 @@ import 'constants.dart';
 import 'package:http/http.dart';
 
 import 'httpbeans/beanarticledetail.dart';
+import 'models/user.dart';
 
 class EcranCompte extends StatefulWidget {
   const EcranCompte({Key? key}) : super(key: key);
@@ -24,6 +26,7 @@ class _NewEcranState extends State<EcranCompte> {
   late bool _isLoading;
   int callNumber = 0;
   int currentPageIndex = 0;
+  final UserBloc userBloc = UserBloc();
 
 
   // M e t h o d  :
@@ -62,12 +65,12 @@ class _NewEcranState extends State<EcranCompte> {
                   children: [
                     const Align(
                       alignment: Alignment.topLeft,
-                      child: Text("Bonjour\nGérer vos données",
+                      child: Text ("Bonjour\nGérer vos données",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           )
-                      ),
+                      ) ,
                     ),
                     Expanded(
                         child: Align(
@@ -77,11 +80,16 @@ class _NewEcranState extends State<EcranCompte> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.deepOrange[400]
                             ),
-                            child: const Text("CONNECTEZ-VOUS",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              )),
+                            child: StreamBuilder(
+                                stream: userBloc.todos,
+                                builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+                                  return Text (snapshot.data!.isEmpty ? "CONNECTEZ-VOUS" : "MON COMPTE",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                  );
+                                })	,
                           ),
                         )
                     )
