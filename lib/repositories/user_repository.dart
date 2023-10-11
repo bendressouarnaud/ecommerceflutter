@@ -4,9 +4,9 @@ import '../models/user.dart';
 class UserRepository {
   final userDao = UserDao();
 
-  Future getCurrentUser() => userDao.getCurrentUser(["iduser","nom","prenom"]);
+  Future getCurrentUser() => userDao.getCurrentUser(["idcli","nom","prenom"]);
 
-  Future getAllUsers(String query) => userDao.getUsers(["iduser","nom","prenom"], query);
+  Future getAllUsers(String query) => userDao.getUsers(["idcli","nom","prenom"], query);
 
   Future insertUser(User user) => userDao.createUser(user);
 

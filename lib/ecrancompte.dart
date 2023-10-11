@@ -9,6 +9,7 @@ import 'carouselcustom.dart';
 import 'constants.dart';
 import 'package:http/http.dart';
 
+import 'ecrancreationcompte.dart';
 import 'httpbeans/beanarticledetail.dart';
 import 'models/user.dart';
 
@@ -76,14 +77,21 @@ class _NewEcranState extends State<EcranCompte> {
                         child: Align(
                           alignment: Alignment.topRight,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder:
+                                      (context) =>
+                                          const EcranCreationCompte()
+                                  ));
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.deepOrange[400]
                             ),
                             child: StreamBuilder(
                                 stream: userBloc.todos,
                                 builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
-                                  return Text (snapshot.data!.isEmpty ? "CONNECTEZ-VOUS" : "MON COMPTE",
+                                  return Text (snapshot.data?.length ==0 ? "CONNECTEZ-VOUS" : "MON COMPTE",
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
