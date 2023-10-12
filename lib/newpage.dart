@@ -199,7 +199,6 @@ class _NewsPageState extends State<NewsPage> {
           child: const Text('Page 1'),
         ),
         const EcranCompte(),
-
       ][currentPageIndex]
       /*SingleChildScrollView(
         child: FutureBuilder(

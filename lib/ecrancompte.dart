@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:newecommerce/beanproduit.dart';
 import 'package:newecommerce/blocs/user_bloc.dart';
 import 'package:newecommerce/skeleton.dart';
@@ -20,7 +21,7 @@ class EcranCompte extends StatefulWidget {
   State<EcranCompte> createState() => _NewEcranState();
 }
 
-class _NewEcranState extends State<EcranCompte> {
+class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
   // A t t r i b u t e s  :
   late Future<List<Produit>> futureProduit;
   late Future<List<Beanarticledetail>> futureBeanarticle;
@@ -28,9 +29,67 @@ class _NewEcranState extends State<EcranCompte> {
   int callNumber = 0;
   int currentPageIndex = 0;
   final UserBloc userBloc = UserBloc();
+  int idcli = 12;
+  String selection = "";
 
 
   // M e t h o d  :
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+
+  @override
+  void dispose(){
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed){
+      /*var snackBar = const SnackBar(content: Text('RESUME'));
+      // Step 3
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
+    }
+    else if(state == AppLifecycleState.inactive){
+      /*var snackBar = const SnackBar(content: Text('INACTIVE'));
+      // Step 3
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
+    }else if(state == AppLifecycleState.paused){
+      /*var snackBar = const SnackBar(content: Text('PAUSE'));
+      // Step 3
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
+    }
+  }
+
+  //
+  Future _buttonTapped() async {
+    Map results =  await Navigator.of(context).push(MaterialPageRoute<dynamic>(
+      builder: (BuildContext context) {
+        return const EcranCreationCompte();
+      },
+    ));
+
+    if (results != null && results.containsKey('selection')) {
+      selection = results['selection'];
+      if(selection == "1"){
+        userBloc.getCurrentUser();
+        /*Fluttertoast.showToast(
+            msg: "This is Center Short Toast",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );*/
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,12 +137,28 @@ class _NewEcranState extends State<EcranCompte> {
                           alignment: Alignment.topRight,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.pushReplacement(
+                              _buttonTapped();
+                              // Insertt DATA :
+                              /*idcli++;
+                              var usr = User(idcli: idcli, commune: 1, genre: 1, nom: "nom",
+                                  prenom: "prenom", email: "email", numero: "numero", adresse: "adresse",
+                                  fcmtoken: "fcmtoken", pwd: "pwd");
+                              userBloc.addUser(usr);
+                              userBloc.getCurrentUser();*/
+
+                              /*Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(builder:
                                       (context) =>
                                           const EcranCreationCompte()
-                                  ));
+                                  ));*/
+
+                              /*Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder:
+                                      (context) =>
+                                  const EcranCreationCompte()
+                                  ));*/
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.deepOrange[400]
@@ -91,6 +166,33 @@ class _NewEcranState extends State<EcranCompte> {
                             child: StreamBuilder(
                                 stream: userBloc.todos,
                                 builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+                                  /*var tp = "";
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
+                                    // Not currently connected to any asynchronous computation.
+                                      tp = "NONE";
+                                      break;
+                                    case ConnectionState.waiting:
+                                    // Connected to an asynchronous computation and awaiting interaction.
+                                      tp = "waiting";
+                                      break;
+                                    case ConnectionState.active:
+                                    // Connected to an active asynchronous computation.
+                                      tp = "active";
+                                      break;
+                                    case ConnectionState.done:
+                                    // Connected to a terminated asynchronous computation.
+                                      tp = "done";
+                                      break;
+                                  }*/
+
+                                  /*return Text (tp,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                  );*/
+
                                   return Text (snapshot.data?.length ==0 ? "CONNECTEZ-VOUS" : "MON COMPTE",
                                       style: const TextStyle(
                                         color: Colors.white,
