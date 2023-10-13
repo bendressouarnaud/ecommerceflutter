@@ -98,23 +98,6 @@ class _NewCreationState extends State<EcranCreationCompte> {
         }
       }
 
-
-      /*List<BeanCustomerCreation> posts = jsonDecode(response.body)
-          .map(
-            (dynamic item) => BeanCustomerCreation.fromJson(item),
-      ).toList();*/
-      
-      // Try to INSERT DATA :
-      /*if(posts.isNotEmpty){
-        if(posts[0].leFlag == 2){
-          await _userRepository.insertUser(posts[0].leUser);
-        }
-        else{
-          var snackBar = const SnackBar(content: Text('Erreur apparue'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
-      }*/
-
       // Set FLAG :
       flagSendData = false;
     }

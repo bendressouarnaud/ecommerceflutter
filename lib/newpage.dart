@@ -87,6 +87,14 @@ class _NewsPageState extends State<NewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
+        indicatorShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+            bottomLeft: Radius.circular(30),
+          )
+        ),
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;

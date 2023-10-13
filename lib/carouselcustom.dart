@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:newecommerce/produit.dart';
 
 import 'beanproduit.dart';
 import 'httpbeans/beanarticledetail.dart';
@@ -57,32 +58,43 @@ class ProduitInterface extends StatelessWidget{
       shrinkWrap: true,
       itemCount: liste.length,
       itemBuilder: (BuildContext context, int index) {
-        return Container(
-          margin: const EdgeInsets.all(10),
-          width: 130,
-          height: 120,
-          //color: Colors.red,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                width: 130,
-                height: 130,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[index].lienweb}?alt=media"
-                        ),
-                        fit: BoxFit.fill
-                    )
+        return GestureDetector(
+          onTap: () {
+            // Display
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return ProduitEcran.setId(liste[index].idprd, liste[index].libelle);
+              }
+            ));
+          },
+          child: Container(
+            margin: const EdgeInsets.all(10),
+            width: 130,
+            height: 120,
+            //color: Colors.red,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  width: 130,
+                  height: 130,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[index].lienweb}?alt=media"
+                          ),
+                          fit: BoxFit.fill
+                      )
+                  ),
                 ),
-              ),
-              Expanded(
-                  child: Text(liste[index].libelle,
-                  )
-              )
-            ],
+                Expanded(
+                    child: Text(liste[index].libelle,
+                    )
+                )
+              ],
+            ),
           ),
         );
       });
@@ -141,7 +153,7 @@ class GridViewLastProduct extends StatelessWidget{
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 10),
+                margin: const EdgeInsets.only(top: 10),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text("${item.articlerestant} élément(s) restant(s)",
