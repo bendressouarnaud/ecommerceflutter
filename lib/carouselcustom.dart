@@ -100,70 +100,66 @@ class GridViewLastProduct extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.all(10),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200,
-          childAspectRatio: 0.80,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10),
-      itemCount: liste.length,
-      itemBuilder: (BuildContext ctx, index) {
-          return Container(
-            padding: const EdgeInsets.all(3),
-            color: customColor,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  width: MediaQuery.of(context).size.width,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[index].lienweb}?alt=media"
-                          ),
-                          fit: BoxFit.fill
-                      )
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(liste[index].libelle.length > 23 ?
-                   "${liste[index].libelle.substring(0,17)} ..." : liste[index].libelle,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold
-                      )
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("${liste[index].prix} FCFA",
-                    textAlign: TextAlign.start,
-                  ),
-                ),
-                Expanded(
-                  child: SizedBox(
-                    child: Container(
-                      //margin: const EdgeInsets.only(top: 10),
-                      height: MediaQuery.of(context).size.height,
-                      margin: const EdgeInsets.only(top: 5),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("${liste[index].articlerestant} élément(s) restant(s)",
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                            fontSize: 12
-                          ),
+    return GridView.extent(
+      maxCrossAxisExtent: 200.0, // maximum item width
+      mainAxisSpacing: 8.0, // spacing between rows
+      crossAxisSpacing: 8.0, // spacing between columns
+      childAspectRatio: 0.80,
+      padding: const EdgeInsets.all(8.0), // padding around the grid
+      children: liste.map((item) {
+        return Container(
+          padding: const EdgeInsets.all(3),
+          color: customColor,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(5),
+                width: MediaQuery.of(context).size.width,
+                height: 160,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(
+                            "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
                         ),
-                      ),
+                        fit: BoxFit.fill
                     )
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(item.libelle.length > 23 ?
+                "${item.libelle.substring(0,17)} ..." : item.libelle,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold
+                    )
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text("${item.prix} FCFA",
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("${item.articlerestant} élément(s) restant(s)",
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(
+                        fontSize: 12
+                    ),
                   ),
                 ),
-              ],
-            ),
-          );
-        }
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+
+      /*itemCount: liste.length,
+      itemBuilder: (BuildContext ctx, index) {
+          return ;
+        }*/
     );
   }
 }

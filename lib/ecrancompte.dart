@@ -44,6 +44,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
   @override
   void dispose(){
     WidgetsBinding.instance.removeObserver(this);
+    userBloc.dispose();
     super.dispose();
   }
 
