@@ -104,7 +104,7 @@ class GridViewLastProduct extends StatelessWidget{
       maxCrossAxisExtent: 200.0, // maximum item width
       mainAxisSpacing: 8.0, // spacing between rows
       crossAxisSpacing: 8.0, // spacing between columns
-      childAspectRatio: 0.80,
+      childAspectRatio: MediaQuery.of(context).size.width /  (MediaQuery.of(context).size.height / 1.6),
       padding: const EdgeInsets.all(8.0), // padding around the grid
       children: liste.map((item) {
         return Container(
@@ -140,7 +140,8 @@ class GridViewLastProduct extends StatelessWidget{
                   textAlign: TextAlign.start,
                 ),
               ),
-              Expanded(
+              Container(
+                margin: EdgeInsets.only(top: 10),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text("${item.articlerestant} élément(s) restant(s)",
@@ -150,7 +151,8 @@ class GridViewLastProduct extends StatelessWidget{
                     ),
                   ),
                 ),
-              ),
+              )
+
             ],
           ),
         );
