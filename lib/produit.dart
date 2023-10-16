@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 
 import 'constants.dart';
@@ -194,47 +195,59 @@ class ProduitEcran extends StatelessWidget{
                                       padding: const EdgeInsets.all(8.0),
                                       children: listeArticle[index].liste.sublist(0,
                                           (listeArticle[index].liste.length > 6 ? 6 : listeArticle[index].liste.length) ).map((item) {
-                                        return Container(
-                                            padding: const EdgeInsets.all(3),
-                                            child: SingleChildScrollView(
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    padding: const EdgeInsets.all(5),
-                                                    width: MediaQuery.of(context).size.width,
-                                                    height: 110,
-                                                    decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                            image: NetworkImage(
-                                                                "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
-                                                            ),
-                                                            fit: BoxFit.fill
-                                                        )
+                                        return GestureDetector(
+                                          onTap: (){
+                                            Fluttertoast.showToast(
+                                                msg: "${dotenv.env['FOO']}",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.CENTER,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                          },
+                                          child: Container(
+                                              padding: const EdgeInsets.all(3),
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      padding: const EdgeInsets.all(5),
+                                                      width: MediaQuery.of(context).size.width,
+                                                      height: 110,
+                                                      decoration: BoxDecoration(
+                                                          image: DecorationImage(
+                                                              image: NetworkImage(
+                                                                  "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
+                                                              ),
+                                                              fit: BoxFit.fill
+                                                          )
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Align(
-                                                    alignment: Alignment.centerLeft,
-                                                    child: Text(item.libelle.length > 16 ?
+                                                    Align(
+                                                      alignment: Alignment.centerLeft,
+                                                      child: Text(item.libelle.length > 16 ?
                                                       "${item.libelle.substring(0,11)} ..." : item.libelle,
-                                                        style: const TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.black
-                                                        )
+                                                          style: const TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors.black
+                                                          )
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Align(
-                                                    alignment: Alignment.centerLeft,
-                                                    child: Text("${item.prix} FCFA",
-                                                      textAlign: TextAlign.start,
-                                                        style: const TextStyle(
-                                                            fontSize: 10,
-                                                            color: Colors.grey
-                                                        )
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            )
+                                                    Align(
+                                                      alignment: Alignment.centerLeft,
+                                                      child: Text("${item.prix} FCFA",
+                                                          textAlign: TextAlign.start,
+                                                          style: const TextStyle(
+                                                              fontSize: 10,
+                                                              color: Colors.grey
+                                                          )
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                          ),
                                         );
                                       }).toList(),
                                     )
