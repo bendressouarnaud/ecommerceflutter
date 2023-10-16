@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:newecommerce/beanproduit.dart';
 import 'package:newecommerce/skeleton.dart';
 import 'package:shimmer/shimmer.dart';
@@ -43,7 +45,7 @@ class _NewsPageState extends State<NewsPage> {
 
   // Get Products :
   Future<List<Produit>> produitLoading() async {
-    final url = Uri.parse('http://10.1.4.102:8080/backendcommerce/getmobileAllProduits');
+    final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobileAllProduits');
     Response response = await get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
@@ -63,7 +65,7 @@ class _NewsPageState extends State<NewsPage> {
 
   // Get Recent Added Products :
   Future<List<Beanarticledetail>> recentProduitLoading() async {
-    final url = Uri.parse('http://10.1.4.102:8080/backendcommerce/getmobilerecentarticles');
+    final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobilerecentarticles');
     final response = await get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
@@ -131,7 +133,16 @@ class _NewsPageState extends State<NewsPage> {
         ),
         actions: [
           IconButton(
-              onPressed: (){},
+              onPressed: (){
+                Fluttertoast.showToast(
+                    msg: "${dotenv.env['FOO']}",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              },
               icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black,)
           ),
           IconButton(

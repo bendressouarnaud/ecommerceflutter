@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'newpage.dart';
 
-void main() {
+//void main() {
+Future main() async {
+  await dotenv.load(fileName: "variable.env");
   runApp(const MyApp());
 }
 

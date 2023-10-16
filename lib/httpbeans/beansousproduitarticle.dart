@@ -12,7 +12,7 @@ class Beansousproduitarticle{
     return Beansousproduitarticle(
         detail: json['detail'],
         iddet: json['iddet'],
-        liste: json['liste']// json['clt']
+        liste: List<dynamic>.from(json['liste']).map((i) => Beanresumearticle.fromJson(i)).toList()
     );
   }
 }

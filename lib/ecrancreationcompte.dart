@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:newecommerce/repositories/user_repository.dart';
@@ -45,7 +46,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
   // M e t h o d  :
   // Get VILLE :
   Future<List<Commune>> communeLoading() async {
-    final url = Uri.parse('http://10.1.4.102:8080/backendcommerce/getmobileAllCommunes');
+    final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobileAllCommunes');
     Response response = await get(url);
     if(response.statusCode == 200){
       _isLoading = true;
@@ -65,7 +66,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
 
   // Send Account DATA :
   Future<void> sendAccountRequest(int commune, int genre) async {
-    final url = Uri.parse('http://10.1.4.102:8080/backendcommerce/managecustomer');
+    final url = Uri.parse('${dotenv.env['URL']}backendcommerce/managecustomer');
     var response = await post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
@@ -83,7 +84,6 @@ class _NewCreationState extends State<EcranCreationCompte> {
 
     // Checks :
     if(response.statusCode == 200){
-
       //List<dynamic> body = jsonDecode(response.body);
       BeanCustomerCreation bn = BeanCustomerCreation.fromJson(json.decode(response.body));
       if(bn != null){
