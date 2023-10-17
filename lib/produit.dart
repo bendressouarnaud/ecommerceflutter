@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
+import 'package:newecommerce/detail.dart';
 
 import 'constants.dart';
 import 'httpbeans/beansousproduit.dart';
@@ -120,7 +121,7 @@ class ProduitEcran extends StatelessWidget{
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(builder: (context) {
-                                        return ProduitEcran.setId(1, "");
+                                        return DetailEcran.setId(listeSousProduit[index].idspr, listeSousProduit[index].libelle);
                                       }
                                       ));
                                 },
