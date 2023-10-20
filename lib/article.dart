@@ -104,7 +104,7 @@ class _NewArticle extends State<ArticleEcran> {
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      height: 60,
+                      height: 70,
                       child: Container(
                         color: bottombararticle,
                         width: MediaQuery.of(context).size.width,
@@ -339,7 +339,7 @@ class _NewArticle extends State<ArticleEcran> {
                             Container(
                                 padding: const EdgeInsets.all(10),
                                 width: MediaQuery.of(context).size.width,
-                                height: 60,
+                                height: 70,
                                 child: Row(
                                     children: [
                                       Align(

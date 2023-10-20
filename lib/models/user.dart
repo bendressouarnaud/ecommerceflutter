@@ -4,19 +4,20 @@ class User {
   // https://pythonforge.com/dart-classes-heritage/
 
   // A t t r i b u t e s  :
-  int? idcli;
-  int? commune;
-  int? genre;
-  String? nom;
-  String? prenom;
-  String? email;
-  String? numero;
-  String? adresse;
-  String? fcmtoken;
-  String? pwd;
+  final int idcli;
+  final int commune;
+  final int genre;
+  final String nom;
+  final String prenom;
+  final String email;
+  final String numero;
+  final String adresse;
+  final String fcmtoken;
+  final String pwd;
 
   // M e t h o d s  :
-  User({required idcli, required commune, required genre, required nom, required prenom, required email, required numero, required adresse, required fcmtoken, required pwd});
+  User({required this.idcli, required this.commune, required this.genre, required this.nom, required this.prenom, required this.email, required this.numero,
+    required this.adresse, required this.fcmtoken, required this.pwd});
   factory User.fromDatabaseJson(Map<String, dynamic> data) => User(
     //This will be used to convert JSON objects that
     //are coming from querying the database and converting
