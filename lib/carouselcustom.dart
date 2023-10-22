@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:newecommerce/produit.dart';
 
 import 'beanproduit.dart';
@@ -60,6 +62,7 @@ class ProduitInterface extends StatelessWidget{
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () {
+            //Get.to(ProduitEcran.setId(liste[index].idprd, liste[index].libelle));
             // Display
             Navigator.push(
                 context,

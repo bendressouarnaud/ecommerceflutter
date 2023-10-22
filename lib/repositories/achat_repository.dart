@@ -11,6 +11,10 @@ class AchatRepository {
 
   Future<List<Achat>> findAllAchatByActif(String query) => tbDao.findAllAchatByActif(["idach","idart","actif"], query);
 
+  // Get ACHAT based on 'idart' and 'actif'
+  Future<List<Achat>> findAllAchatByIdartAndActif(int idart, int actif) =>
+      tbDao.findAllAchatByIdartAndActif(["idach","idart","actif"], idart, actif);
+
   Future<int> insertAchat(Achat dt) => tbDao.createAchat(dt);
 
   Future updateAchat(Achat dt) => tbDao.updateAchat(dt);

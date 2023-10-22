@@ -47,6 +47,21 @@ class AchatDao {
     return liste;
   }
 
+  //Get All ACHATS by 'idart' and 'actif'
+  Future<List<Achat>> findAllAchatByIdartAndActif(List<String> columns, int idart, int actif) async {
+    final db = await dbProvider.database;
+    late List<Map<String, dynamic>> result;
+    result = await db.query("achat",
+        columns: columns,
+        where: 'actif = ? and idart = ?',
+        whereArgs: [actif, idart]);
+
+    List<Achat> liste = result.isNotEmpty
+        ? result.map((item) => Achat.fromJson(item)).toList()
+        : [];
+    return liste;
+  }
+
   //Update Achat
   Future<int> updateAchat(Achat dt) async {
     final db = await dbProvider.database;

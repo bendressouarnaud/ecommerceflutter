@@ -146,9 +146,6 @@ class _NewSousproduit extends State<Sousproduitecran> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -232,10 +229,10 @@ class _NewSousproduit extends State<Sousproduitecran> {
                     );
                   },
                   child: Container(
-                    margin: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(5),
                     width: MediaQuery.of(context).size.width,
-                    height: 180,
-                    color: cardviewsousproduit,
+                    height: 215,
+                    color: cardviewsousproduit,  // Colors.blueGrey
                     child: Row(
                       children: [
                         Align(
@@ -244,18 +241,18 @@ class _NewSousproduit extends State<Sousproduitecran> {
                             width: 110,
                             height: 110,
                             //color: Colors.green,
-                            margin: const EdgeInsets.only(left: 5, top: 5),
+                            margin: EdgeInsets.only(left: 5, top: 5),
                             child: CachedNetworkImage(
-                              alignment: Alignment.topCenter,
-                              width: 100,
-                              height: 100,
+                              /*width: 50,
+                              height: 50,*/
+                              fit: BoxFit.cover,
                               imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[index].beanarticle.lienweb}?alt=media",
                               imageBuilder: (context, imageProvider) => Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
                                   image: DecorationImage(
                                     image: imageProvider,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                               ),
@@ -267,94 +264,174 @@ class _NewSousproduit extends State<Sousproduitecran> {
                         Expanded(
                             child: Container(
                               padding: const EdgeInsets.only(left: 10),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(liste[index].beanarticle.libelle,
-                                          style: TextStyle(
-
-                                          )
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text('${liste[index].beanarticle.prix} FCFA',
-                                          style: TextStyle(
-
-                                          )
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(top: 10),
-                                      child: Row(
-                                        children: [
-                                          Text('${liste[index].beanarticle.prix} FCFA',
-                                              style: TextStyle(
-
-                                              )
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text('- 40%',
-                                              style: TextStyle(
-
-                                              )
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text('${liste[index].beanarticle.articlerestant} article(s) restant(s)',
-                                          style: TextStyle(
-                                              color: Colors.grey
-                                          )
-                                      ),
-                                    ),
-                                    const Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                              Icons.star_outline
-                                          ),
-                                          Icon(
-                                              Icons.star_outline
-                                          ),
-                                          Icon(
-                                              Icons.star_outline
-                                          ),
-                                          Icon(
-                                              Icons.star_outline
-                                          ),
-                                          Icon(
-                                              Icons.star_outline
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Align(
-                                        alignment: Alignment.topRight,
-                                        child: TextButton(
-                                          style: TextButton.styleFrom(
-                                            backgroundColor: butcardviewsousproduit,
-                                            foregroundColor: Colors.white,
-                                            padding: const EdgeInsets.all(16.0),
-                                            textStyle: const TextStyle(fontSize: 20),
-                                          ),
-                                          onPressed: () {
-                                            _achatController.addData(liste[index].beanarticle.idart);
-                                            setState(() {
-                                            });
-                                          },
-                                          child: Text('Achetez ${_achatController.taskData.length}'),
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                        liste[index].beanarticle.libelle.toLowerCase().length > 25 ?
+                                        "${liste[index].beanarticle.libelle.substring(0,20)} ..." :
+                                        liste[index].beanarticle.libelle,
+                                        style: const TextStyle(
+                                          fontSize: 18
                                         )
-                                    )
-                                  ],
-                                ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text('${liste[index].beanarticle.prix} FCFA',
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                          fontWeight: FontWeight.bold
+                                        )
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      children: [
+                                        Text('${liste[index].beanarticle.prix} FCFA',
+                                            style: TextStyle(
+
+                                            )
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text('- 40%',
+                                            style: TextStyle(
+
+                                            )
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text('${liste[index].beanarticle.articlerestant} article(s) restant(s)',
+                                        style: TextStyle(
+                                            color: Colors.grey
+                                        )
+                                    ),
+                                  ),
+                                  const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                            Icons.star_outline
+                                        ),
+                                        Icon(
+                                            Icons.star_outline
+                                        ),
+                                        Icon(
+                                            Icons.star_outline
+                                        ),
+                                        Icon(
+                                            Icons.star_outline
+                                        ),
+                                        Icon(
+                                            Icons.star_outline
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.symmetric(vertical: 5),
+                                      width: MediaQuery.of(context).size.width,
+                                      //color: Colors.lightBlue[100],
+                                      height: 70,
+                                      child: Row(
+                                        children: [
+                                          Visibility(
+                                            visible: liste[index].beanarticle.idart == _achatController.idart ? true : false,
+                                            child: Container(
+                                              margin: const EdgeInsets.symmetric(horizontal: 7),
+                                              child: const CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: ((_achatController.taskData.indexWhere((element) => element.idart == liste[index].beanarticle.idart)
+                                                > -1) && !(liste[index].beanarticle.idart==_achatController.idart)) ? true : false,
+                                            child: Container(
+                                              margin: const EdgeInsets.symmetric(horizontal: 10),
+                                              child: TextButton(
+                                                style: TextButton.styleFrom(
+                                                  backgroundColor: butcardviewsousproduit,
+                                                  foregroundColor: Colors.white,
+                                                  padding: const EdgeInsets.all(16.0),
+                                                  textStyle: const TextStyle(fontSize: 20),
+                                                ),
+                                                onPressed: () {
+                                                  _achatController.addData(liste[index].beanarticle.idart, operation: 1);
+                                                },
+                                                child: const Text('-'),
+                                              ),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: ((_achatController.taskData.indexWhere((element) => element.idart == liste[index].beanarticle.idart)
+                                                > -1) && !(liste[index].beanarticle.idart==_achatController.idart)) ? true : false,
+                                            child: Container(
+                                                margin: const EdgeInsets.symmetric(horizontal: 10),
+                                                child: Text('${ _achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart ==
+                                                    liste[index].beanarticle.idart ? 1 : 0).reduce((value, element) => value + element) : 0}',
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 20
+                                                  ),
+                                                )
+                                            ),
+                                          ),
+                                          Visibility(
+                                              visible: ((_achatController.taskData.indexWhere((element) => element.idart == liste[index].beanarticle.idart)
+                                                  > -1) && !(liste[index].beanarticle.idart==_achatController.idart)) ? true : false,
+                                              child: Container(
+                                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                                child: TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    backgroundColor: butcardviewsousproduit,
+                                                    foregroundColor: Colors.white,
+                                                    padding: const EdgeInsets.all(16.0),
+                                                    textStyle: const TextStyle(fontSize: 20),
+                                                  ),
+                                                  onPressed: () {
+                                                    _achatController.addData(liste[index].beanarticle.idart);
+                                                  },
+                                                  child: const Text('+'),
+                                                ),
+                                              )
+                                          ),
+                                          Visibility(
+                                            visible: _achatController.taskData.indexWhere((element) => element.idart == liste[index].beanarticle.idart)
+                                                > -1 ? false : true,
+                                            child: Expanded(
+                                                child: Align(
+                                                    alignment: Alignment.topRight,
+                                                    child: TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor: butcardviewsousproduit,
+                                                        foregroundColor: Colors.white,
+                                                        padding: const EdgeInsets.all(16.0),
+                                                        textStyle: const TextStyle(fontSize: 20),
+                                                      ),
+                                                      onPressed: () {
+                                                        _achatController.addData(liste[index].beanarticle.idart);
+                                                        /*setState(() {
+                                                          });*/
+                                                      },
+                                                      child: const Text('Acheter'),
+                                                    )
+                                                )
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    /*
+                                      ,*/
+                                  )
+                                ],
                               ),
                             )
                         )

@@ -3,15 +3,22 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:newecommerce/beanproduit.dart';
 import 'package:newecommerce/skeleton.dart';
 import 'package:shimmer/shimmer.dart';
 import 'carouselcustom.dart';
 import 'constants.dart';
 import 'package:http/http.dart';
+import 'package:http/src/response.dart' as mreponse;
 
 import 'ecrancompte.dart';
+import 'getxcontroller/getachatcontroller.dart';
 import 'httpbeans/beanarticledetail.dart';
+import 'package:badges/badges.dart' as badges;
+
+
 
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -27,6 +34,7 @@ class _NewsPageState extends State<NewsPage> {
   late bool _isLoading;
   int callNumber = 0;
   int currentPageIndex = 0;
+  final AchatGetController _achatController = Get.put(AchatGetController());
 
 
   // M e t h o d  :
@@ -35,18 +43,27 @@ class _NewsPageState extends State<NewsPage> {
     _isLoading = true;
     //futureProduit = produitLoading();
     //futureBeanarticle = recentProduitLoading();
-    /*Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
+    Future.delayed(const Duration(seconds: 1), () {
+      _achatController.refreshMainInterface();
+      /*Fluttertoast.showToast(
+          msg: "${dotenv.env['FOO']}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);*/
+      /*setState(() {
         _isLoading = false;
-      });
-    });*/
+      });*/
+    });
     super.initState();
   }
 
   // Get Products :
   Future<List<Produit>> produitLoading() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobileAllProduits');
-    Response response = await get(url);
+    mreponse.Response response = await get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
       List<dynamic> body = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
@@ -132,18 +149,23 @@ class _NewsPageState extends State<NewsPage> {
             )
         ),
         actions: [
-          IconButton(
-              onPressed: (){
-                Fluttertoast.showToast(
-                    msg: "${dotenv.env['FOO']}",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              },
-              icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black,)
+          badges.Badge(
+              position: badges.BadgePosition.topEnd(top: 0, end: 3),
+              badgeAnimation: const badges.BadgeAnimation.slide(
+              ),
+              showBadge: true,
+              badgeStyle: const badges.BadgeStyle(
+                badgeColor: Colors.red,
+              ),
+              badgeContent: GetBuilder<AchatGetController>(
+                builder: (_) {
+                  return Text(
+                    '${_achatController.taskData.length}',
+                    style: const TextStyle(color: Colors.white),
+                  );
+                },
+              ),
+              child: IconButton(icon: const Icon(Icons.shopping_cart), onPressed: () {})
           ),
           IconButton(
               onPressed: (){},
