@@ -66,7 +66,7 @@ class _NewsPageState extends State<NewsPage> {
     mreponse.Response response = await get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
-      List<dynamic> body = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
+      List<dynamic> body = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
       List<Produit> posts = body
           .map(
             (dynamic item) => Produit.fromJson(item),

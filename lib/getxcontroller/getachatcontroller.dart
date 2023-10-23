@@ -21,7 +21,7 @@ class AchatGetController extends GetxController {
   }
 
   void _getData() {
-    _achatRepository.findAllAchatByActif("0").then((value) {
+    _achatRepository.findAllAchatByActif("1").then((value) {
       for (var element in value) {
         taskData.add(Achat(idach: element.idach, idart: element.idart, actif: element.actif));
       }
@@ -37,13 +37,13 @@ class AchatGetController extends GetxController {
     // operation = 0  --> AJOUT
     // operation = 1  --> SUPPRESSION
     if(operation == 0) {
-      var achat = Achat(idach: 0, idart: article, actif: 0);
+      var achat = Achat(idach: 0, idart: article, actif: 1);
       await _achatRepository.insertAchat(achat);
       taskData.insert(0, achat);
     }
     else{
       // Look for ONE OCCURRENCE to delete :
-      List<Achat> lte = await _achatRepository.findAllAchatByIdartAndActif(article, 0) ;
+      List<Achat> lte = await _achatRepository.findAllAchatByIdartAndActif(article, 1) ;
       var idach = lte.first.idach;
       // Delete :
       await _achatRepository.deleteAchatById(idach);

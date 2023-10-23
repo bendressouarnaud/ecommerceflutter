@@ -279,7 +279,10 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                   ),
                                   Align(
                                     alignment: Alignment.topLeft,
-                                    child: Text('${liste[index].beanarticle.prix} FCFA',
+                                    child: Text('${ liste[index].beanarticle.reduction > 0 ?
+                                    (liste[index].beanarticle.prix-
+                                        ((liste[index].beanarticle.prix * liste[index].beanarticle.reduction)/100)).toInt() :
+                                    liste[index].beanarticle.prix} FCFA',
                                         style: const TextStyle(
                                             fontSize: 18,
                                           fontWeight: FontWeight.bold
@@ -288,23 +291,25 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                   ),
                                   Container(
                                     margin: const EdgeInsets.only(top: 10),
-                                    child: Row(
+                                    child: liste[index].beanarticle.reduction > 0 ? Row(
                                       children: [
                                         Text('${liste[index].beanarticle.prix} FCFA',
-                                            style: TextStyle(
-
+                                            style: const TextStyle(
+                                                decoration: TextDecoration.lineThrough
                                             )
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 10,
                                         ),
-                                        Text('- 40%',
-                                            style: TextStyle(
-
+                                        Text('-${liste[index].beanarticle.reduction}%',
+                                            style: const TextStyle(
+                                                color: promotioncolor,
+                                              fontWeight: FontWeight.bold
                                             )
                                         )
                                       ],
-                                    ),
+                                    ) :
+                                    Container(height: 10,),
                                   ),
                                   Align(
                                     alignment: Alignment.topLeft,
