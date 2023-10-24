@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart';
 import 'package:group_radio_button/group_radio_button.dart';
+import 'package:newecommerce/panier.dart';
 import 'package:newecommerce/repositories/achat_repository.dart';
 import 'package:newecommerce/repositories/user_repository.dart';
 
@@ -174,16 +175,20 @@ class _NewSousproduit extends State<Sousproduitecran> {
                     );
                   },
                 ),
-                child: IconButton(icon: const Icon(Icons.shopping_cart), onPressed: () {})
-            )
-            /*IconButton(
-                onPressed: (){},
-                icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black,)
+                child: IconButton(icon: const Icon(Icons.shopping_cart), onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return const Paniercran();
+                      }
+                      )
+                  );
+                })
             ),
             IconButton(
                 onPressed: (){},
                 icon: const Icon(Icons.search, color: Colors.black)
-            )*/
+            )
           ],
         ),
         body: !flagReady ? FutureBuilder(
