@@ -105,7 +105,27 @@ class _NewPanier extends State<Paniercran> {
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                 List<BeanArticlestatusresponse> liste =  snapshot.data[0];
-                return Container();
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Text("RÉSUMÉ DU PANIER",
+                        style: TextStyle(
+                          color: Colors.grey
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Text("Sous-total",
+                            style: TextStyle(
+                                color: Colors.black,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                );
               }
               else{
                 return ListView.separated(
