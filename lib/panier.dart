@@ -36,6 +36,7 @@ class _NewPanier extends State<Paniercran> {
   // A T T R I B U T E S /
   //final _achatRepository = AchatRepository();
   final AchatGetController _achatController = Get.put(AchatGetController());
+  //final _
 
 
   // M e t h o d  :
@@ -108,21 +109,44 @@ class _NewPanier extends State<Paniercran> {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
-                      Text("RÉSUMÉ DU PANIER",
-                        style: TextStyle(
-                          color: Colors.grey
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text("Sous-total",
+                      Container(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text("RÉSUMÉ DU PANIER",
                             style: TextStyle(
-                                color: Colors.black,
-                              fontWeight: FontWeight.bold
+                                color: Colors.grey
                             ),
                           ),
-                        ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        margin: EdgeInsets.only(top: 10),
+                        child: Row(
+                          children: [
+                            Text("Sous-total",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            Expanded(
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(""
+                                    /*_achatController.taskData.map((achat) => achat.),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold
+                                    ),*/
+                                  )
+                                )
+                            )
+                          ],
+                        ),
                       )
+
                     ],
                   ),
                 );

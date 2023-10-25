@@ -12,6 +12,7 @@ import 'package:http/http.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:newecommerce/panier.dart';
 import 'package:newecommerce/repositories/achat_repository.dart';
+import 'package:newecommerce/repositories/article_repository.dart';
 import 'package:newecommerce/repositories/user_repository.dart';
 
 import 'article.dart';
@@ -59,6 +60,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
   final lesGenres = ["M", "F"];
   final _userRepository = UserRepository();
   final _achatRepository = AchatRepository();
+  final _articleRepository = ArticleRepository();
   late BuildContext dialogContext;
   bool flagSendData = false;
   bool flagReady = false;
@@ -196,6 +198,10 @@ class _NewSousproduit extends State<Sousproduitecran> {
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                 liste =  snapshot.data[0];
+
+                // Try to STORE this in 'ARTICLE' table :
+
+
                 flagReady = true;
                 return refreshInterface();
               }
