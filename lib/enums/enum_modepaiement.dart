@@ -1,0 +1,4 @@
+enum Modepaiement{
+  livraison,
+  mobilemoney
+}

@@ -198,10 +198,6 @@ class _NewSousproduit extends State<Sousproduitecran> {
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                 liste =  snapshot.data[0];
-
-                // Try to STORE this in 'ARTICLE' table :
-
-
                 flagReady = true;
                 return refreshInterface();
               }

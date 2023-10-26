@@ -202,7 +202,7 @@ class _NewArticle extends State<ArticleEcran> {
                       top: 0,
                       right: 0,
                       left: 0,
-                      bottom: 60,
+                      bottom: 70,
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
