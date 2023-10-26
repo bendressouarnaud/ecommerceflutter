@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart';
+import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/models/achat.dart';
 import 'package:newecommerce/repositories/achat_repository.dart';
 
@@ -41,9 +42,20 @@ class _NewPanier extends State<Paniercran> {
   //final _achatRepository = AchatRepository();
   final AchatGetController _achatController = Get.put(AchatGetController());
   Modepaiement? _modepaiement = Modepaiement.livraison;
+  int choixpaiement = 0;
 
 
   // M e t h o d  :
+  // Format AMOUNT
+  String formatPrice(int price){
+    MoneyFormatter fmf = MoneyFormatter(
+        amount: price.toDouble()
+    );
+    //
+    return fmf.output.withoutFractionDigits;
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +69,7 @@ class _NewPanier extends State<Paniercran> {
     List<int> finalListe = [];
     setIdart.forEach((element) => finalListe.add(element));
 
-    Fluttertoast.showToast(
+    /*Fluttertoast.showToast(
         msg: "Taille: ${finalListe.length}",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
@@ -65,7 +77,7 @@ class _NewPanier extends State<Paniercran> {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0
-    );
+    );*/
 
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getarticledetailspanier');
 
@@ -130,30 +142,42 @@ class _NewPanier extends State<Paniercran> {
                                   builder: (BuildContext context) {
                                     //dialogContext = context;
                                     return AlertDialog(
-                                      title: Text('Choisir un mode de paiement'),
+                                      title: const Text('Mode de paiement',
+                                        textAlign: TextAlign.center,
+                                      ),
                                       content: Container(
-                                        height: 150,
+                                        height: 130,
                                         child: Column(
                                           children: [
-                                            ListTile(
-                                              title: const Text('À la livraison'),
-                                              leading: Radio(
-                                                value: Modepaiement.livraison,
-                                                groupValue: _modepaiement,
-                                                onChanged: (Modepaiement? v) {
-                                                  _modepaiement = v;
-                                                },
-                                              ),
+                                            GetBuilder<AchatGetController>(
+                                              builder: (_) {
+                                                return ListTile(
+                                                  title: const Text('À la livraison'),
+                                                  leading: Radio(
+                                                    value: 0,
+                                                    groupValue: choixpaiement,
+                                                    onChanged: (int? v) {
+                                                      choixpaiement = v!;
+                                                      _achatController.setFlag(choixpaiement);
+                                                    },
+                                                  ),
+                                                );
+                                              }
                                             ),
-                                            ListTile(
-                                              title: const Text('Mobile Money'),
-                                              leading: Radio(
-                                                value: Modepaiement.mobilemoney,
-                                                groupValue: _modepaiement,
-                                                onChanged: (Modepaiement? v) {
-                                                  _modepaiement = v;
-                                                },
-                                              ),
+                                            GetBuilder<AchatGetController>(
+                                                builder: (_) {
+                                                  return ListTile(
+                                                    title: const Text('Mobile Money'),
+                                                    leading: Radio(
+                                                      value: 1,
+                                                      groupValue: choixpaiement,
+                                                      onChanged: (int? v) {
+                                                        choixpaiement = v!;
+                                                        _achatController.setFlag(choixpaiement);
+                                                      },
+                                                    ),
+                                                  );
+                                                }
                                             )
                                           ],
                                         ),
@@ -218,9 +242,9 @@ class _NewPanier extends State<Paniercran> {
                                   Expanded(
                                       child: Align(
                                           alignment: Alignment.topRight,
-                                          child: Text('${liste.map((e) => e.reduction > 0 ? (e.prix-
+                                          child: Text('${formatPrice(liste.map((e) => e.reduction > 0 ? (e.prix-
                                               ((e.prix * e.reduction)/100)).toInt() :
-                                          e.prix).toList().reduce((value, element) => value + element)} FCFA',
+                                          e.prix).toList().reduce((value, element) => value + element))} FCFA',
                                             style: const TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,
@@ -299,10 +323,10 @@ class _NewPanier extends State<Paniercran> {
                                                                 //color: Colors.blue[100],
                                                                 alignment: Alignment.topLeft,
                                                                 height: 25,
-                                                                child: Text('${ liste[index].reduction > 0 ?
+                                                                child: Text('${ formatPrice(liste[index].reduction > 0 ?
                                                                 (liste[index].prix-
                                                                     ((liste[index].prix * liste[index].reduction)/100)).toInt() :
-                                                                liste[index].prix} FCFA',
+                                                                liste[index].prix)} FCFA',
                                                                     style: const TextStyle(
                                                                         fontSize: 18,
                                                                         fontWeight: FontWeight.bold
@@ -315,7 +339,7 @@ class _NewPanier extends State<Paniercran> {
                                                                 margin: const EdgeInsets.only(top: 10),
                                                                 child: liste[index].reduction > 0 ? Row(
                                                                   children: [
-                                                                    Text('${liste[index].prix} FCFA',
+                                                                    Text('${formatPrice(liste[index].prix)} FCFA',
                                                                         style: const TextStyle(
                                                                             decoration: TextDecoration.lineThrough
                                                                         )

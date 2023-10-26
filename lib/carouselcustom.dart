@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/produit.dart';
 
+import 'article.dart';
 import 'beanproduit.dart';
 import 'httpbeans/beanarticledetail.dart';
 
@@ -113,6 +115,15 @@ class GridViewLastProduct extends StatelessWidget{
   final List<Beanarticledetail> liste;
 
 
+  // METHOD :
+  String formatPrice(int price){
+    MoneyFormatter fmf = MoneyFormatter(
+        amount: price.toDouble()
+    );
+    //
+    return fmf.output.withoutFractionDigits;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GridView.extent(
@@ -122,53 +133,65 @@ class GridViewLastProduct extends StatelessWidget{
       childAspectRatio: MediaQuery.of(context).size.width /  (MediaQuery.of(context).size.height / 1.6),
       padding: const EdgeInsets.all(8.0), // padding around the grid
       children: liste.map((item) {
-        return Container(
-          padding: const EdgeInsets.all(3),
-          color: customColor,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                width: MediaQuery.of(context).size.width,
-                height: 160,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
-                        ),
-                        fit: BoxFit.fill
-                    )
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(item.libelle.length > 23 ?
-                "${item.libelle.substring(0,17)} ..." : item.libelle,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold
-                    )
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("${item.prix} FCFA",
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("${item.articlerestant} élément(s) restant(s)",
-                    textAlign: TextAlign.start,
-                    style: const TextStyle(
-                        fontSize: 12
-                    ),
+        return GestureDetector(
+          onTap: () {
+            // Display
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return ArticleEcran.setId(item.idart, 0, 0);
+                }
+                )
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(3),
+            color: customColor,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  width: MediaQuery.of(context).size.width,
+                  height: 160,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
+                          ),
+                          fit: BoxFit.fill
+                      )
                   ),
                 ),
-              )
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(item.libelle.length > 23 ?
+                  "${item.libelle.substring(0,17)} ..." : item.libelle,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold
+                      )
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("${formatPrice(item.prix)} FCFA",
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("${item.articlerestant} élément(s) restant(s)",
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                          fontSize: 12
+                      ),
+                    ),
+                  ),
+                )
 
-            ],
+              ],
+            ),
           ),
         );
       }).toList(),

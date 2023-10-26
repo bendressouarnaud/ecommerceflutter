@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
+import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/detail.dart';
 
 import 'constants.dart';
@@ -25,6 +26,14 @@ class ProduitEcran extends StatelessWidget{
 
 
   // METHODS :
+  String formatPrice(int price){
+    MoneyFormatter fmf = MoneyFormatter(
+        amount: price.toDouble()
+    );
+    //
+    return fmf.output.withoutFractionDigits;
+  }
+
   // Get SUB-Product :
   Future<List<Beansousproduit>> sousproduitLoading() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobileallsousproduitsbyidprd');
@@ -237,7 +246,7 @@ class ProduitEcran extends StatelessWidget{
                                                     ),
                                                     Align(
                                                       alignment: Alignment.centerLeft,
-                                                      child: Text("${item.prix} FCFA",
+                                                      child: Text("${formatPrice(item.prix)} FCFA",
                                                           textAlign: TextAlign.start,
                                                           style: const TextStyle(
                                                               fontSize: 10,

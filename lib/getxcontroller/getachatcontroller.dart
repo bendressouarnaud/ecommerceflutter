@@ -12,12 +12,18 @@ class AchatGetController extends GetxController {
   final _achatRepository = AchatRepository();
   int idart = 0;
   bool hideButton = false;
+  int selection = 0;
 
 
   @override
   void onInit() {
     _getData();
     super.onInit();
+  }
+
+  void setFlag(int selection){
+    this.selection = selection;
+    update();
   }
 
   void _getData() {

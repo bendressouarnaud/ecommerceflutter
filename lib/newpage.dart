@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:newecommerce/beanproduit.dart';
+import 'package:newecommerce/panier.dart';
 import 'package:newecommerce/skeleton.dart';
 import 'package:shimmer/shimmer.dart';
 import 'carouselcustom.dart';
@@ -165,7 +166,15 @@ class _NewsPageState extends State<NewsPage> {
                   );
                 },
               ),
-              child: IconButton(icon: const Icon(Icons.shopping_cart), onPressed: () {})
+              child: IconButton(icon: const Icon(Icons.shopping_cart), onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return const Paniercran();
+                    }
+                    )
+                );
+              })
           ),
           IconButton(
               onPressed: (){},

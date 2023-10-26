@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart';
 import 'package:group_radio_button/group_radio_button.dart';
+import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/panier.dart';
 import 'package:newecommerce/repositories/achat_repository.dart';
 import 'package:newecommerce/repositories/article_repository.dart';
@@ -73,8 +74,16 @@ class _NewSousproduit extends State<Sousproduitecran> {
 
 
 
-
   // M e t h o d  :
+  String formatPrice(int price){
+    MoneyFormatter fmf = MoneyFormatter(
+        amount: price.toDouble()
+    );
+    //
+    return fmf.output.withoutFractionDigits;
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -286,10 +295,10 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                   ),
                                   Align(
                                     alignment: Alignment.topLeft,
-                                    child: Text('${ liste[index].beanarticle.reduction > 0 ?
+                                    child: Text('${ formatPrice(liste[index].beanarticle.reduction > 0 ?
                                     (liste[index].beanarticle.prix-
                                         ((liste[index].beanarticle.prix * liste[index].beanarticle.reduction)/100)).toInt() :
-                                    liste[index].beanarticle.prix} FCFA',
+                                    liste[index].beanarticle.prix)} FCFA',
                                         style: const TextStyle(
                                             fontSize: 18,
                                           fontWeight: FontWeight.bold
@@ -300,7 +309,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                     margin: const EdgeInsets.only(top: 10),
                                     child: liste[index].beanarticle.reduction > 0 ? Row(
                                       children: [
-                                        Text('${liste[index].beanarticle.prix} FCFA',
+                                        Text('${formatPrice(liste[index].beanarticle.prix)} FCFA',
                                             style: const TextStyle(
                                                 decoration: TextDecoration.lineThrough
                                             )
