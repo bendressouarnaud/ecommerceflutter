@@ -305,6 +305,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
                                   // Get 'Genre' id :
                                   var idGenr = defaultGenre == "M" ? 1 : 0;
                                   showDialog(
+                                      barrierDismissible: false,
                                       context: context,
                                       builder: (BuildContext context) {
                                         dialogContext = context;

@@ -1,5 +1,6 @@
 
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 
@@ -43,6 +44,8 @@ class _NewPanier extends State<Paniercran> {
   final AchatGetController _achatController = Get.put(AchatGetController());
   Modepaiement? _modepaiement = Modepaiement.livraison;
   int choixpaiement = 0;
+  late BuildContext dialogContext;
+
 
 
   // M e t h o d  :
@@ -138,9 +141,9 @@ class _NewPanier extends State<Paniercran> {
                             child: GestureDetector(
                               onTap: () {
                                 showDialog(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (BuildContext context) {
-                                    //dialogContext = context;
                                     return AlertDialog(
                                       title: const Text('Mode de paiement',
                                         textAlign: TextAlign.center,
@@ -188,7 +191,43 @@ class _NewPanier extends State<Paniercran> {
                                             child: const Text('Annuler'),
                                           ),
                                           TextButton(
-                                            onPressed: () => Navigator.pop(context, 'OK'),
+                                            onPressed: () {
+
+                                              showDialog(
+                                                  barrierDismissible: false,
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    dialogContext = context;
+                                                    return const AlertDialog(
+                                                      title: Text('Information'),
+                                                      content: Text("Veuillez patienter ...")
+                                                    );
+                                                  }
+                                              );
+
+                                              // Send DATA :
+                                              //flagSendData = true;
+                                              sendAccountRequest(idComm, idGenr);
+
+                                              // Run TIMER :
+                                              Timer.periodic(
+                                                const Duration(seconds: 1),
+                                                    (timer) {
+                                                  // Update user about remaining time
+                                                  if(!flagSendData){
+                                                    Navigator.pop(dialogContext);
+                                                    timer.cancel();
+
+                                                    // Kill ACTIVITY :
+                                                    if(Navigator.canPop(context)){
+                                                      //Navigator.pop(context);
+                                                      Navigator.of(context).pop({'selection': '1'});
+                                                    }
+                                                  }
+                                                },
+                                              );
+
+                                            },
                                             child: const Text('OK'),
                                           ),
                                         ]
@@ -196,7 +235,7 @@ class _NewPanier extends State<Paniercran> {
                                   }
                                 );
                               },
-                              child: Text('PAYER',
+                              child: const Text('PAYER',
                                 style: TextStyle(
                                     color: Colors.deepOrange,
                                     fontWeight: FontWeight.bold,
