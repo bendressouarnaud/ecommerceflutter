@@ -113,163 +113,177 @@ class ProduitEcran extends StatelessWidget{
             List<Beansousproduit> listeSousProduit = snapshot.data[0];
             List<Beansousproduitarticle> listeArticle = snapshot.data[1];
 
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 140,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: listeSousProduit.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                                onTap: () {
-                                  // Display
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) {
-                                        return DetailEcran.setId(listeSousProduit[index].idspr, listeSousProduit[index].libelle);
-                                      }
-                                      ));
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.all(10),
-                                  width: 120,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: const Color(0xff7c94b6),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.dstATop),
-                                      image: NetworkImage(
-                                        'https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${listeSousProduit[index].lienweb}?alt=media',
-                                      ),
+            return Column(
+              children: [
+                SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 140,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: listeSousProduit.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                              onTap: () {
+                                // Display
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return DetailEcran.setId(listeSousProduit[index].idspr, listeSousProduit[index].libelle);
+                                    }
+                                    ));
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                width: 120,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: const Color(0xff7c94b6),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.dstATop),
+                                    image: NetworkImage(
+                                      'https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${listeSousProduit[index].lienweb}?alt=media',
                                     ),
                                   ),
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Text(listeSousProduit[index].libelle,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color: Colors.white,
-                                          //backgroundColor: Colors.grey
-                                        )),
-                                  ),
-                                )
-                            );
-                          }
-                      )
-                  ),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 500,
-                      child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: listeArticle.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Column(
-                              children: [
-                                Container(
-                                  color: greenGridViewtitle,// Colors.green[200],
-                                  padding: const EdgeInsets.only(left: 10, right: 10),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Row(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(listeArticle[index].detail),
-                                      ),
-                                      const Expanded(
-                                          child: Align(
-                                            alignment: Alignment.topRight,
-                                            child: Text("Voir tout"),
-                                          )
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                                // Set GRIDVIEW :
-                                SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 340,
-                                    child: GridView.extent(
-                                      maxCrossAxisExtent: 150.0, // maximum item width
-                                      mainAxisSpacing: 8.0, // spacing between rows
-                                      crossAxisSpacing: 8.0, // spacing between columns
-                                      childAspectRatio: MediaQuery.of(context).size.width /  (MediaQuery.of(context).size.height / 1.6),
-                                      padding: const EdgeInsets.all(8.0),
-                                      children: listeArticle[index].liste.sublist(0,
-                                          (listeArticle[index].liste.length > 6 ? 6 : listeArticle[index].liste.length) ).map((item) {
-                                        return GestureDetector(
-                                          onTap: (){
-                                            Fluttertoast.showToast(
-                                                msg: "${dotenv.env['FOO']}",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.CENTER,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.red,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                          },
-                                          child: Container(
-                                              padding: const EdgeInsets.all(3),
-                                              child: SingleChildScrollView(
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      padding: const EdgeInsets.all(5),
-                                                      width: MediaQuery.of(context).size.width,
-                                                      height: 110,
-                                                      decoration: BoxDecoration(
-                                                          image: DecorationImage(
-                                                              image: NetworkImage(
-                                                                  "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
-                                                              ),
-                                                              fit: BoxFit.fill
-                                                          )
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment: Alignment.centerLeft,
-                                                      child: Text(item.libelle.length > 16 ?
-                                                      "${item.libelle.substring(0,11)} ..." : item.libelle,
-                                                          style: const TextStyle(
-                                                              fontSize: 12,
-                                                              color: Colors.black
-                                                          )
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment: Alignment.centerLeft,
-                                                      child: Text("${formatPrice(item.prix)} FCFA",
-                                                          textAlign: TextAlign.start,
-                                                          style: const TextStyle(
-                                                              fontSize: 10,
-                                                              color: Colors.grey
-                                                          )
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(listeSousProduit[index].libelle,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        //backgroundColor: Colors.grey
+                                      )),
+                                ),
+                              )
+                          );
+                        }
+                    )
+                ),
+                Expanded(
+                    child: SingleChildScrollView(
+                      child: SizedBox(
+                          width: MediaQuery.of(context).size.width, // listeArticle.length < 4 ? 250 :
+                          //height: MediaQuery.of(context).size.height,
+                          child: ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: listeArticle.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Column(
+                                  children: [
+                                    Container(
+                                      color: greenGridViewtitle,// Colors.green[200],
+                                      padding: const EdgeInsets.only(left: 10, right: 10),
+                                      margin: const EdgeInsets.only(left: 10, right: 10),
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 30,
+                                      child: Row(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(listeArticle[index].detail,
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                          ),
+                                          const Expanded(
+                                              child: Align(
+                                                alignment: Alignment.centerRight,
+                                                child: Text("Voir tout",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold
+                                                    )),
                                               )
                                           ),
-                                        );
-                                      }).toList(),
+                                        ],
+                                      ),
+                                    ),
+                                    // Set GRIDVIEW :
+                                    SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        height: listeArticle[index].liste.length < 4 ? 200 : 340,
+                                        child: GridView.extent(
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          maxCrossAxisExtent: 150.0, // maximum item width
+                                          mainAxisSpacing: 8.0, // spacing between rows
+                                          crossAxisSpacing: 8.0, // spacing between columns
+                                          childAspectRatio: MediaQuery.of(context).size.width /  (MediaQuery.of(context).size.height / 1.6),
+                                          padding: const EdgeInsets.all(8.0),
+                                          children: listeArticle[index].liste.sublist(0,
+                                              (listeArticle[index].liste.length > 6 ? 6 : listeArticle[index].liste.length) ).map((item) {
+                                            return GestureDetector(
+                                              onTap: (){
+                                                Fluttertoast.showToast(
+                                                    msg: "${dotenv.env['FOO']}",
+                                                    toastLength: Toast.LENGTH_SHORT,
+                                                    gravity: ToastGravity.CENTER,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor: Colors.red,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
+                                              },
+                                              child: Container(
+                                                  padding: const EdgeInsets.all(3),
+                                                  child: SingleChildScrollView(
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          padding: const EdgeInsets.all(5),
+                                                          width: MediaQuery.of(context).size.width,
+                                                          height: 110,
+                                                          decoration: BoxDecoration(
+                                                              image: DecorationImage(
+                                                                  image: NetworkImage(
+                                                                      "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
+                                                                  ),
+                                                                  fit: BoxFit.fill
+                                                              )
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment.centerLeft,
+                                                          child: Text(item.libelle.length > 16 ?
+                                                          "${item.libelle.substring(0,11)} ..." : item.libelle,
+                                                              style: const TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Colors.black
+                                                              )
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment.centerLeft,
+                                                          child: Text("${formatPrice(item.prix)} FCFA",
+                                                              textAlign: TextAlign.start,
+                                                              style: const TextStyle(
+                                                                  fontSize: 10,
+                                                                  color: Colors.grey
+                                                              )
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  )
+                                              ),
+                                            );
+                                          }).toList(),
+                                        )
                                     )
-                                )
-                              ],
-                            );
-                          }
-                      )
-                  )
-
-                ],
-              ),
+                                  ],
+                                );
+                              }
+                          )
+                      ),
+                    )
+                )
+              ],
             );
           }
           else{
