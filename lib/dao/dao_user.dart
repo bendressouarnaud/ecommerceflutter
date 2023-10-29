@@ -13,6 +13,17 @@ class UserDao {
     return result;
   }
 
+  Future<User?> getConnectedUser() async {
+    final db = await dbProvider.database;
+    var results = await db.rawQuery('SELECT * FROM user');
+
+    if (results.isNotEmpty) {
+      return User.fromDatabaseJson(results.first);
+    }
+
+    return null;
+  }
+
   // Get ONE USER :
   Future<List<User>> getCurrentUser(List<String> columns) async{
     final db = await dbProvider.database;

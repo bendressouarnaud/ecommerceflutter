@@ -14,4 +14,12 @@ class BeanActif {
         total: json['total']
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'idart': idart,
+      'actif': actif,
+      'total': total
+    };
+  }
 }

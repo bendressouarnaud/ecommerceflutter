@@ -14,6 +14,7 @@ import 'constants.dart';
 import 'package:http/http.dart';
 import 'package:http/src/response.dart' as mreponse;
 
+import 'ecrancommande.dart';
 import 'ecrancompte.dart';
 import 'getxcontroller/getachatcontroller.dart';
 import 'httpbeans/beanarticledetail.dart';
@@ -243,11 +244,7 @@ class _NewsPageState extends State<NewsPage> {
             },
           ),
         ),
-        Container(
-          color: Colors.red,
-          alignment: Alignment.center,
-          child: const Text('Page 1'),
-        ),
+        CommandeEcran(),
         const EcranCompte(),
       ][currentPageIndex]
       /*SingleChildScrollView(

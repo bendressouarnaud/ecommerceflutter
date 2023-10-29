@@ -12,14 +12,18 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart';
 import 'package:money_formatter/money_formatter.dart';
+import 'package:newecommerce/httpbeans/beanactif.dart';
 import 'package:newecommerce/models/achat.dart';
 import 'package:newecommerce/repositories/achat_repository.dart';
+import 'package:newecommerce/repositories/user_repository.dart';
 
 import 'constants.dart';
 import 'enums/enum_modepaiement.dart';
 import 'getxcontroller/getachatcontroller.dart';
 import 'httpbeans/beanarticlestatusresponse.dart';
 import 'httpbeans/beanreponsepanier.dart';
+import 'httpbeans/responsebooking.dart';
+import 'models/user.dart';
 import 'newpage.dart';
 
 
@@ -42,9 +46,13 @@ class _NewPanier extends State<Paniercran> {
   // A T T R I B U T E S /
   //final _achatRepository = AchatRepository();
   final AchatGetController _achatController = Get.put(AchatGetController());
+  final UserRepository _userRepository = UserRepository();
   Modepaiement? _modepaiement = Modepaiement.livraison;
   int choixpaiement = 0;
-  late BuildContext dialogContext;
+  late BuildContext dialogContextPaiement;
+  late BuildContext dialogContextWaiting;
+  bool flagSendData = false;
+  User? usr;
 
 
 
@@ -60,27 +68,36 @@ class _NewPanier extends State<Paniercran> {
 
 
   @override
-  void initState() {
+  void initState(){
+
+    // Pick User Id :
+    _userRepository.getConnectedUser().then((value) {
+      if (value != null) {
+        usr = value;
+      }
+    });
+
+    /*if(usr!=null) {
+      Fluttertoast.showToast(
+          msg: "User : ${usr!.idcli}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    }*/
+
     super.initState();
   }
 
   // Get Products :
   Future<List<Beanreponsepanier>> getArticlesStatus() async {
 
-    //List<Achat> liste =  _achatRepository.findAllAchatByActif("1") as List<Achat>;
     Set<int> setIdart = _achatController.taskData.map((element) => element.idart).toSet();
     List<int> finalListe = [];
     setIdart.forEach((element) => finalListe.add(element));
-
-    /*Fluttertoast.showToast(
-        msg: "Taille: ${finalListe.length}",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0
-    );*/
 
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getarticledetailspanier');
 
@@ -106,6 +123,46 @@ class _NewPanier extends State<Paniercran> {
   }
 
 
+  // Call to Process PAYMENT :
+  sendbooking() async {
+
+    final url = Uri.parse('${dotenv.env['URL']}backendcommerce/sendbooking');
+    var response = await post(url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "liste": _achatController.listePanier,
+          "idcli": usr!.idcli,
+          "choixpaiement": choixpaiement
+        }));
+
+    // Checks :
+    if(response.statusCode == 200){
+      //List<dynamic> body = jsonDecode(response.body);
+      ResponseBooking rg = ResponseBooking.fromJson(json.decode(response.body));
+      if(rg != null){
+        if(rg.etat == 1){
+          int ligne = _achatController.closeLiveAchat();
+          flagSendData = false;
+        }
+        else{
+          Fluttertoast.showToast(
+              msg: "Erreur apparue !",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        }
+      }
+
+      // Set FLAG :
+      //flagSendData = false;
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,7 +179,7 @@ class _NewPanier extends State<Paniercran> {
         ),
         body: FutureBuilder(
             future: Future.wait([getArticlesStatus()]),
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            builder: (BuildContext contextMain, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                 List<Beanreponsepanier> liste =  snapshot.data[0];
                 return Stack(
@@ -134,16 +191,17 @@ class _NewPanier extends State<Paniercran> {
                         height: 50,
                         child: Container(
                           color: bottombararticle,
-                          width: MediaQuery.of(context).size.width,
+                          width: MediaQuery.of(contextMain).size.width,
                           padding: const EdgeInsets.all(10),
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: GestureDetector(
                               onTap: () {
                                 showDialog(
-                                  barrierDismissible: false,
+                                  //barrierDismissible: false,
                                   context: context,
-                                  builder: (BuildContext context) {
+                                  builder: (BuildContext ctP) {
+                                    dialogContextPaiement = ctP;
                                     return AlertDialog(
                                       title: const Text('Mode de paiement',
                                         textAlign: TextAlign.center,
@@ -187,17 +245,20 @@ class _NewPanier extends State<Paniercran> {
                                       ),
                                       actions: <Widget>[
                                           TextButton(
-                                            onPressed: () => Navigator.pop(context, 'Cancel'),
+                                            onPressed: () => Navigator.pop(dialogContextPaiement,'Cancel'),//Navigator.pop(context, 'Cancel'),
                                             child: const Text('Annuler'),
                                           ),
                                           TextButton(
                                             onPressed: () {
 
+                                              // Close the previous :
+                                              Navigator.pop(dialogContextPaiement, 'OK');
+
                                               showDialog(
-                                                  barrierDismissible: false,
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    dialogContext = context;
+                                                  //barrierDismissible: false,
+                                                  context: contextMain,
+                                                  builder: (BuildContext ctI) {
+                                                    dialogContextWaiting = ctI;
                                                     return const AlertDialog(
                                                       title: Text('Information'),
                                                       content: Text("Veuillez patienter ...")
@@ -206,22 +267,36 @@ class _NewPanier extends State<Paniercran> {
                                               );
 
                                               // Send DATA :
-                                              //flagSendData = true;
-                                              sendAccountRequest(idComm, idGenr);
+                                              flagSendData = true;
+                                              sendbooking();
+
+                                              var cpt = 0;
 
                                               // Run TIMER :
                                               Timer.periodic(
                                                 const Duration(seconds: 1),
                                                     (timer) {
                                                   // Update user about remaining time
-                                                  if(!flagSendData){
-                                                    Navigator.pop(dialogContext);
+                                                  if((++cpt > 5) || !flagSendData){
+                                                    Navigator.pop(dialogContextWaiting);
                                                     timer.cancel();
+                                                    if(cpt > 5){
+                                                      Fluttertoast.showToast(
+                                                          msg: "Impossible de traiter l'opération !",
+                                                          toastLength: Toast.LENGTH_SHORT,
+                                                          gravity: ToastGravity.CENTER,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor: Colors.red,
+                                                          textColor: Colors.white,
+                                                          fontSize: 16.0
+                                                      );
+                                                      /*var snackBar = const SnackBar(content: Text('Impossible de traiter l\'opération !'));
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
+                                                    }
 
                                                     // Kill ACTIVITY :
-                                                    if(Navigator.canPop(context)){
-                                                      //Navigator.pop(context);
-                                                      Navigator.of(context).pop({'selection': '1'});
+                                                    if(Navigator.canPop(contextMain)){
+                                                      Navigator.pop(contextMain);
                                                     }
                                                   }
                                                 },

@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:newecommerce/repositories/achat_repository.dart';
 
+import '../httpbeans/beanactif.dart';
 import '../models/achat.dart';
 
 class AchatGetController extends GetxController {
 
   //
   var taskData = <Achat>[].obs;
+  List<BeanActif> listePanier = [];
   final _achatRepository = AchatRepository();
   int idart = 0;
   bool hideButton = false;
@@ -18,7 +20,30 @@ class AchatGetController extends GetxController {
   @override
   void onInit() {
     _getData();
+    findAllLive();
     super.onInit();
+  }
+
+  // Get Live ACHAT :
+  void findAllLive() {
+    _achatRepository.findAllLive().then((value) => {
+      for (var element in value) {
+        listePanier.add(element)
+      }
+    });
+  }
+
+  // Close LIVE ACHAT
+  int closeLiveAchat(){
+    int ret = 0;
+    _achatRepository.resetLiveAchat().then((value) => {
+      ret = value
+    });
+
+    //
+    taskData.clear();
+    update();
+    return ret;
   }
 
   void setFlag(int selection){

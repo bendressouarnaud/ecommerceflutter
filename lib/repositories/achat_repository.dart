@@ -2,6 +2,7 @@
 
 import 'package:newecommerce/dao/dao_achat.dart';
 
+import '../httpbeans/beanactif.dart';
 import '../models/achat.dart';
 
 class AchatRepository {
@@ -20,6 +21,9 @@ class AchatRepository {
   Future updateAchat(Achat dt) => tbDao.updateAchat(dt);
 
   Future deleteAchatById(int id) => tbDao.deleteAchatById(id);
+
+  Future<List<BeanActif>> findAllLive() => tbDao.findAllLive();
+  Future<int> resetLiveAchat() => tbDao.resetLiveAchat();
 
 //We are not going to use this in the demo
 //Future deleteAllUsers() => userDao.deleteAllTodos();

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:newecommerce/httpbeans/beanactif.dart';
+
 import '../database/database.dart';
 import '../models/achat.dart';
 
@@ -12,6 +14,20 @@ class AchatDao {
     //var result = db.insert("achat", dt.toJson());
     var result = db.rawInsert('INSERT INTO achat(idart, actif) values("${dt.idart}", "${dt.actif}")');// .insert("achat", dt.toJson());
     return result;
+  }
+
+  // Get list of ACHAT with agregate :
+  Future<List<BeanActif>> findAllLive() async {
+    final db = await dbProvider.database;
+    List<Map> result = await db.rawQuery('SELECT distinct idart, actif,count(idach) as total FROM Achat where actif=1 group by idart, actif');
+
+    List<BeanActif> liste = [];
+    result.forEach((row) {
+      BeanActif bf = BeanActif(idart: row['idart'], actif: 1, total: row['total']);
+      liste.add(bf);
+    });
+
+    return liste;
   }
 
   // Get ACHATS :
@@ -67,6 +83,12 @@ class AchatDao {
     final db = await dbProvider.database;
     var result = await db.update("achat", dt.toJson(),
         where: "idach = ?", whereArgs: [dt.idach]);
+    return result;
+  }
+
+  Future<int> resetLiveAchat() async {
+    final db = await dbProvider.database;
+    var result = await db.rawUpdate("update achat set actif = 0 where actif = 1");
     return result;
   }
 
