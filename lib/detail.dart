@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -10,6 +11,7 @@ import 'package:http/http.dart';
 import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/sousproduit.dart';
 
+import 'article.dart';
 import 'constants.dart';
 import 'httpbeans/beansousproduit.dart';
 import 'httpbeans/beansousproduitarticle.dart';
@@ -44,7 +46,7 @@ class DetailEcran extends StatelessWidget{
           "idprd": idSprod
         }));
     if(response.statusCode == 200){
-      List<dynamic> body = jsonDecode(response.body);
+      List<dynamic> body = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
       List<Detail> posts = body
           .map(
             (dynamic item) => Detail.fromJson(item),
@@ -67,7 +69,7 @@ class DetailEcran extends StatelessWidget{
           "idprd": idSprod
         }));
     if(response.statusCode == 200){
-      List<dynamic> body = jsonDecode(response.body);
+      List<dynamic> body = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
       List<Beansousproduitarticle> posts = body
           .map(
             (dynamic item) => Beansousproduitarticle.fromJson(item),
@@ -225,14 +227,13 @@ class DetailEcran extends StatelessWidget{
                                                 (listeArticle[index].liste.length > 6 ? 6 : listeArticle[index].liste.length) ).map((item) {
                                               return GestureDetector(
                                                 onTap: (){
-                                                  Fluttertoast.showToast(
-                                                      msg: "${dotenv.env['FOO']}",
-                                                      toastLength: Toast.LENGTH_SHORT,
-                                                      gravity: ToastGravity.CENTER,
-                                                      timeInSecForIosWeb: 1,
-                                                      backgroundColor: Colors.red,
-                                                      textColor: Colors.white,
-                                                      fontSize: 16.0);
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) {
+                                                        return ArticleEcran.setId(item.idart, 0, 0);
+                                                      }
+                                                      )
+                                                  );
                                                 },
                                                 child: Container(
                                                     padding: const EdgeInsets.all(3),
@@ -243,14 +244,31 @@ class DetailEcran extends StatelessWidget{
                                                             padding: const EdgeInsets.all(5),
                                                             width: MediaQuery.of(context).size.width,
                                                             height: 110,
-                                                            decoration: BoxDecoration(
+                                                            child: CachedNetworkImage(
+                                                              imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media",
+                                                              imageBuilder: (context, imageProvider) => Container(
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(8.0),
+                                                                  image: DecorationImage(
+                                                                    image: imageProvider,
+                                                                    fit: BoxFit.fill,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              placeholder: (context, url) => const CircularProgressIndicator(
+                                                                color: Colors.amber,
+                                                              ),
+                                                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                            )
+
+                                                            /*decoration: BoxDecoration(
                                                                 image: DecorationImage(
                                                                     image: NetworkImage(
                                                                         "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
                                                                     ),
                                                                     fit: BoxFit.fill
                                                                 )
-                                                            ),
+                                                            ),*/
                                                           ),
                                                           Align(
                                                             alignment: Alignment.centerLeft,

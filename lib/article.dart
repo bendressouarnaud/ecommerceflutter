@@ -207,8 +207,8 @@ class _NewArticle extends State<ArticleEcran> {
                         child: Column(
                           children: [
                             Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 250,
+                                width: MediaQuery.of(context).size.width, // 250
+                                height: ((article.trackVetement == 4) || (article.taille == 1)) ? 440 : 250,
                                 child: CarouselSlider.builder(
                                   itemCount: article.images.length,
                                   itemBuilder: (BuildContext context, int itemIndex, int t) => Container(
@@ -224,12 +224,14 @@ class _NewArticle extends State<ArticleEcran> {
                                           ),
                                         ),
                                       ),
-                                      placeholder: (context, url) => const CircularProgressIndicator(),
+                                      placeholder: (context, url) => const CircularProgressIndicator(
+                                        color: Colors.amber,
+                                      ),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     ),
                                   ),
                                   options: CarouselOptions(
-                                    height: 200.0,
+                                    height: ((article.trackVetement == 4) || (article.taille == 1)) ? 435.0 : 200.0,
                                     enlargeCenterPage: true,
                                     autoPlay: true,
                                     aspectRatio: 16 / 9,

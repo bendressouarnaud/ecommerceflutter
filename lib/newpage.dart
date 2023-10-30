@@ -43,21 +43,8 @@ class _NewsPageState extends State<NewsPage> {
   @override
   void initState() {
     _isLoading = true;
-    //futureProduit = produitLoading();
-    //futureBeanarticle = recentProduitLoading();
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 700), () {
       _achatController.refreshMainInterface();
-      /*Fluttertoast.showToast(
-          msg: "${dotenv.env['FOO']}",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);*/
-      /*setState(() {
-        _isLoading = false;
-      });*/
     });
     super.initState();
   }
@@ -226,7 +213,8 @@ class _NewsPageState extends State<NewsPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 510,
+                      height: 810,
+                      //color: Colors.amber,
                       width: MediaQuery.of(context).size.width,
                       child: GridViewLastProduct(liste: bl),
                     )

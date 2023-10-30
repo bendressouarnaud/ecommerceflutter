@@ -10,7 +10,7 @@ class UserRepository {
 
   Future getAllUsers(String query) => userDao.getUsers(["idcli","nom","prenom"], query);
 
-  Future insertUser(User user) => userDao.createUser(user);
+  Future<int> insertUser(User user) => userDao.createUser(user);
 
   Future updateUser(User user) => userDao.updateUser(user);
 

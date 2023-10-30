@@ -32,7 +32,9 @@ class CarouselInterface extends StatelessWidget{
               ),
             ),
           ),
-          placeholder: (context, url) => const CircularProgressIndicator(),
+          placeholder: (context, url) => const CircularProgressIndicator(
+            color: Colors.amber,
+          ),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
       ),
@@ -78,13 +80,37 @@ class ProduitInterface extends StatelessWidget{
             width: 130,
             height: 120,
             //color: Colors.red,
+
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  //padding: const EdgeInsets.all(20),
+                  //color: Colors.blueGrey[100],
                   width: 130,
-                  height: 130,
-                  decoration: BoxDecoration(
+                  height: 120,
+
+                  child: CachedNetworkImage(
+                    width: 110,
+                    height: 110,
+                    //fit: BoxFit.fill,
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[index].lienweb}?alt=media",
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                    placeholder: (context, url) => const CircularProgressIndicator(
+                      color: Colors.amber,
+                    ),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                  )
+
+
+                  /*decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
                           image: NetworkImage(
@@ -92,7 +118,7 @@ class ProduitInterface extends StatelessWidget{
                           ),
                           fit: BoxFit.fill
                       )
-                  ),
+                  ),*/
                 ),
                 Expanded(
                     child: Text(liste[index].libelle,
@@ -127,6 +153,7 @@ class GridViewLastProduct extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return GridView.extent(
+      physics: const NeverScrollableScrollPhysics(),
       maxCrossAxisExtent: 200.0, // maximum item width
       mainAxisSpacing: 8.0, // spacing between rows
       crossAxisSpacing: 8.0, // spacing between columns
@@ -153,14 +180,31 @@ class GridViewLastProduct extends StatelessWidget{
                   padding: const EdgeInsets.all(5),
                   width: MediaQuery.of(context).size.width,
                   height: 160,
-                  decoration: BoxDecoration(
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media",
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                    placeholder: (context, url) => const CircularProgressIndicator(
+                      color: Colors.amber,
+                    ),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                  )
+                  /*decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
                               "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
                           ),
                           fit: BoxFit.fill
                       )
-                  ),
+                  ),*/
                 ),
                 Align(
                   alignment: Alignment.centerLeft,

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:newecommerce/beanproduit.dart';
 import 'package:newecommerce/blocs/user_bloc.dart';
 import 'package:newecommerce/skeleton.dart';
@@ -11,6 +13,7 @@ import 'constants.dart';
 import 'package:http/http.dart';
 
 import 'ecrancreationcompte.dart';
+import 'getxcontroller/getusercontroller.dart';
 import 'httpbeans/beanarticledetail.dart';
 import 'models/user.dart';
 
@@ -28,23 +31,28 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
   late bool _isLoading;
   int callNumber = 0;
   int currentPageIndex = 0;
-  final UserBloc userBloc = UserBloc();
+  //final UserBloc userBloc = UserBloc();
   int idcli = 12;
   String selection = "";
+  //
+  final UserGetController _userController = Get.put(UserGetController());
+
 
 
   // M e t h o d  :
   @override
   void initState() {
+    Future.delayed(const Duration(milliseconds: 400), () {
+      _userController.refreshMainInterface();
+    });
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
   }
 
 
   @override
   void dispose(){
-    WidgetsBinding.instance.removeObserver(this);
-    userBloc.dispose();
+    //WidgetsBinding.instance.removeObserver(this);
+    //userBloc.dispose();
     super.dispose();
   }
 
@@ -77,7 +85,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
     if (results != null && results.containsKey('selection')) {
       selection = results['selection'];
       if(selection == "1"){
-        userBloc.getCurrentUser();
+        //userBloc.getCurrentUser();
         /*Fluttertoast.showToast(
             msg: "This is Center Short Toast",
             toastLength: Toast.LENGTH_SHORT,
@@ -138,7 +146,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
                           alignment: Alignment.topRight,
                           child: ElevatedButton(
                             onPressed: () {
-                              _buttonTapped();
+                              //_buttonTapped();
                               // Insertt DATA :
                               /*idcli++;
                               var usr = User(idcli: idcli, commune: 1, genre: 1, nom: "nom",
@@ -154,53 +162,28 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
                                           const EcranCreationCompte()
                                   ));*/
 
-                              /*Navigator.push(
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(builder:
                                       (context) =>
                                   const EcranCreationCompte()
-                                  ));*/
+                                  ));
+
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.deepOrange[400]
                             ),
-                            child: StreamBuilder(
-                                stream: userBloc.todos,
-                                builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
-                                  /*var tp = "";
-                                  switch (snapshot.connectionState) {
-                                    case ConnectionState.none:
-                                    // Not currently connected to any asynchronous computation.
-                                      tp = "NONE";
-                                      break;
-                                    case ConnectionState.waiting:
-                                    // Connected to an asynchronous computation and awaiting interaction.
-                                      tp = "waiting";
-                                      break;
-                                    case ConnectionState.active:
-                                    // Connected to an active asynchronous computation.
-                                      tp = "active";
-                                      break;
-                                    case ConnectionState.done:
-                                    // Connected to a terminated asynchronous computation.
-                                      tp = "done";
-                                      break;
-                                  }*/
+                            child: GetBuilder<UserGetController>(
+                              builder: (_) {
+                                return Text (_userController.userData.isEmpty ? "CONNECTEZ-VOUS" : "MON COMPTE",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    )
+                                );
+                              },
+                            )
 
-                                  /*return Text (tp,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      )
-                                  );*/
-
-                                  return Text (snapshot.data?.length ==0 ? "CONNECTEZ-VOUS" : "MON COMPTE",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      )
-                                  );
-                                })	,
                           ),
                         )
                     )

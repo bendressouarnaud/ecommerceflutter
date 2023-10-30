@@ -4,11 +4,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:newecommerce/repositories/user_repository.dart';
+import 'package:http/src/response.dart' as mreponse;
 
 import 'constants.dart';
+import 'getxcontroller/getusercontroller.dart';
 import 'httpbeans/beancustomercreation.dart';
 import 'httpbeans/commune.dart';
 import 'models/user.dart';
@@ -40,6 +45,8 @@ class _NewCreationState extends State<EcranCreationCompte> {
   final _userRepository = UserRepository();
   late BuildContext dialogContext;
   bool flagSendData = false;
+  //
+  final UserGetController _userController = Get.put(UserGetController());
 
 
 
@@ -47,7 +54,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
   // Get VILLE :
   Future<List<Commune>> communeLoading() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobileAllCommunes');
-    Response response = await get(url);
+    mreponse.Response response = await get(url);
     if(response.statusCode == 200){
       _isLoading = true;
       List<dynamic> body = jsonDecode(response.body);
@@ -88,13 +95,21 @@ class _NewCreationState extends State<EcranCreationCompte> {
       BeanCustomerCreation bn = BeanCustomerCreation.fromJson(json.decode(response.body));
       if(bn != null){
         if(bn.leFlag == 2){
-          await _userRepository.insertUser(bn.leUser);
+          _userController.addData(bn.leUser);
+          /*await _userRepository.insertUser(bn.leUser);
           // Call this :
-          _userRepository.getCurrentUser();
+          _userRepository.getCurrentUser();*/
         }
         else{
-          var snackBar = const SnackBar(content: Text('Erreur apparue'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Fluttertoast.showToast(
+              msg: "Erreur apparue",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
         }
       }
 
@@ -341,8 +356,8 @@ class _NewCreationState extends State<EcranCreationCompte> {
 
                                         // Kill ACTIVITY :
                                         if(Navigator.canPop(context)){
-                                          //Navigator.pop(context);
-                                          Navigator.of(context).pop({'selection': '1'});
+                                          Navigator.pop(context);
+                                          //Navigator.of(context).pop({'selection': '1'});
                                         }
                                         /*else{
                                           SystemNavigator.pop();
