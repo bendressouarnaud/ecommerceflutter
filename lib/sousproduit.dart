@@ -142,7 +142,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
 
     if(response.statusCode == 200){
       _isLoading = true;
-      List<dynamic> body = jsonDecode(response.body);
+      List<dynamic> body = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
       List<BeanResumeArticleDetail> posts = body
           .map(
             (dynamic item) => BeanResumeArticleDetail.fromJson(item),
