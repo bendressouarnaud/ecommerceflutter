@@ -21,21 +21,31 @@ class CarouselInterface extends StatelessWidget{
       itemCount: liste.length,
       itemBuilder: (BuildContext context, int itemIndex, int t) => Container(
         margin: const EdgeInsets.all(6.0),
-        child: CachedNetworkImage(
-          imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[itemIndex].lienweb}?alt=media",
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
+        child: GestureDetector(
+          onTap: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return ProduitEcran.setId(liste[itemIndex].idprd, liste[itemIndex].libelle);
+                }
+                ));
+          },
+          child: CachedNetworkImage(
+            imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[itemIndex].lienweb}?alt=media",
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
+            placeholder: (context, url) => const CircularProgressIndicator(
+              color: Colors.amber,
+            ),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
-          placeholder: (context, url) => const CircularProgressIndicator(
-            color: Colors.amber,
-          ),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
       ),
       options: CarouselOptions(

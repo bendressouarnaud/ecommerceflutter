@@ -43,7 +43,7 @@ class _NewsPageState extends State<NewsPage> {
   @override
   void initState() {
     _isLoading = true;
-    Future.delayed(const Duration(milliseconds: 700), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       _achatController.refreshMainInterface();
     });
     super.initState();

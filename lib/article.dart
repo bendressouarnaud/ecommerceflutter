@@ -150,17 +150,17 @@ class _NewArticle extends State<ArticleEcran> {
                                         margin: const EdgeInsets.only(left: 7),
                                         child: Row(
                                           children: [
-                                            Icon(
+                                            const Icon(
                                               Icons.call,
                                               color: bottombararticlecolor,
                                               size: 40,
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 20,
                                             ),
                                             Visibility(
-                                              visible: false,
-                                              child: CircularProgressIndicator(
+                                              visible: idart == _achatController.idart ? true : false,
+                                              child: const CircularProgressIndicator(
                                                 color: Colors.black,
                                               )
                                             )
@@ -194,14 +194,16 @@ class _NewArticle extends State<ArticleEcran> {
                                       )
                                   ),
                                   Positioned(
-                                      right: _achatController.taskData.indexWhere((element) => element.idart == idart)
-                                          > -1 ? 5 : 130,
+                                      right: ((_achatController.taskData.indexWhere((element) => element.idart == idart)
+                                          > -1) &&
+                                          (article.nombrearticle - _achatController.taskData.map((element) => element.idart == idart ? 1 : 0).reduce((value, element) => value + element) > 0)) ? 5 : 130,
                                       top: 1,
                                       bottom: 1,
                                       width: 50,
                                       child: Visibility(
-                                        visible: _achatController.taskData.indexWhere((element) => element.idart == idart)
-                                            > -1 ? true : false,
+                                        visible: ((_achatController.taskData.indexWhere((element) => element.idart == idart)
+                                            > -1) &&
+                                            ((article.nombrearticle - (_achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart == idart ? 1 : 0).reduce((value, element) => value + element) : 0)) > 0)) ? true : false,
                                         child: Container(
                                           padding: const EdgeInsets.all(4),
                                           child: TextButton(
@@ -211,28 +213,31 @@ class _NewArticle extends State<ArticleEcran> {
                                               padding: const EdgeInsets.all(16.0),
                                               textStyle: const TextStyle(fontSize: 20),
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              _achatController.addData(idart);
+                                            },
                                             child: const Text('+'),
                                           ),
                                         ),
                                       )
                                   ),
                                   Positioned(
-                                      right: _achatController.taskData.indexWhere((element) => element.idart == idart)
-                                          > -1 ? 60 : 185,
+                                      right: _achatController.taskData.indexWhere((element) => element.idart == idart) > -1 ? 60 : 185,
                                       top: 0,
                                       bottom: 0,
                                       width: 20,
                                       child: Visibility(
-                                        visible: _achatController.taskData.indexWhere((element) => element.idart == idart)
-                                            > -1 ? true : false,
+                                        visible: _achatController.taskData.indexWhere((element) => element.idart == idart) > -1 ? true : false,
                                         child: Container(
                                           //color: Colors.red,
                                           child: Align(
                                             alignment: Alignment.center,
-                                            child: Text("0",
-                                              style: TextStyle(
-                                                //backgroundColor: Colors.green
+                                            child: Text('${ _achatController.taskData.isNotEmpty ?
+                                              _achatController.taskData.map((element) => element.idart == idart ? 1 : 0)
+                                                .reduce((value, element) => value + element) : 0}',
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16
                                               ),
                                             ),
                                           ),
@@ -240,14 +245,12 @@ class _NewArticle extends State<ArticleEcran> {
                                       )
                                   ),
                                   Positioned(
-                                      right: _achatController.taskData.indexWhere((element) => element.idart == idart)
-                                          > -1 ? 85 : 210,
+                                      right: _achatController.taskData.indexWhere((element) => element.idart == idart) > -1 ? 85 : 210,
                                       top: 1,
                                       bottom: 1,
                                       width: 50,
                                       child: Visibility(
-                                        visible: _achatController.taskData.indexWhere((element) => element.idart == idart)
-                                            > -1 ? true : false,
+                                        visible: _achatController.taskData.indexWhere((element) => element.idart == idart) > -1 ? true : false,
                                         child: Container(
                                           padding: EdgeInsets.all(4),
                                           child: TextButton(
@@ -257,7 +260,9 @@ class _NewArticle extends State<ArticleEcran> {
                                               padding: const EdgeInsets.all(16.0),
                                               textStyle: const TextStyle(fontSize: 20),
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              _achatController.addData(idart, operation: 1);
+                                            },
                                             child: const Text('-'),
                                           ),
                                         ),
@@ -354,17 +359,19 @@ class _NewArticle extends State<ArticleEcran> {
                                     width: MediaQuery.of(context).size.width,
                                     child: Row(
                                       children: [
-                                        const Icon(
-                                          Icons.check_circle_outline,
-                                          color: Colors.green,
+                                        Icon(
+                                          (article.nombrearticle - (_achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart == idart ? 1 : 0).reduce((value, element) => value + element) : 0)) > 0 ? Icons.check_circle_outline : Icons.error,
+                                          color: (article.nombrearticle - (_achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart == idart ? 1 : 0).reduce((value, element) => value + element) : 0)) > 0 ? Colors.green : Colors.red ,
                                         ),
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        Text('${article.nombrearticle} article(s) restant(s)',
-                                          style: const TextStyle(
+                                        Text('${article.nombrearticle -
+                                            (_achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart == idart ? 1 : 0)
+                                                .reduce((value, element) => value + element) : 0)} article(s) restant(s)',
+                                          style: TextStyle(
                                               fontSize: 15,
-                                              color: Colors.green
+                                              color: (article.nombrearticle - (_achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart == idart ? 1 : 0).reduce((value, element) => value + element) : 0)) > 0 ? Colors.green : Colors.red ,
                                           ),
                                         )
                                       ],

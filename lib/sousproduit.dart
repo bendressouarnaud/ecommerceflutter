@@ -180,9 +180,20 @@ class _NewSousproduit extends State<Sousproduitecran> {
                 ),
                 badgeContent: GetBuilder<AchatGetController>(
                   builder: (_) {
-                    return Text(
-                      '${_achatController.taskData.length}',
-                      style: const TextStyle(color: Colors.white),
+                    return GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return const Paniercran();
+                            }
+                            )
+                        );
+                      },
+                      child: Text(
+                        '${_achatController.taskData.length}',
+                        style: const TextStyle(color: Colors.white),
+                      )
                     );
                   },
                 ),
@@ -329,8 +340,10 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                   ),
                                   Align(
                                     alignment: Alignment.topLeft,
-                                    child: Text('${liste[index].beanarticle.articlerestant} article(s) restant(s)',
-                                        style: TextStyle(
+                                    child: Text('${liste[index].beanarticle.articlerestant -
+                                        (_achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart == liste[index].beanarticle.idart ? 1 : 0)
+                                            .reduce((value, element) => value + element) : 0)} article(s) restant(s)',
+                                        style: const TextStyle(
                                             color: Colors.grey
                                         )
                                     ),
@@ -406,8 +419,9 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                             ),
                                           ),
                                           Visibility(
-                                              visible: ((_achatController.taskData.indexWhere((element) => element.idart == liste[index].beanarticle.idart)
-                                                  > -1) && !(liste[index].beanarticle.idart==_achatController.idart)) ? true : false,
+                                              visible: (((_achatController.taskData.indexWhere((element) => element.idart == liste[index].beanarticle.idart)
+                                                  > -1) && !(liste[index].beanarticle.idart==_achatController.idart)) &&
+                                                  ((liste[index].beanarticle.articlerestant - _achatController.taskData.map((element) => element.idart == liste[index].beanarticle.idart ? 1 : 0).reduce((value, element) => value + element)) > 0)) ? true : false,
                                               child: Container(
                                                 margin: EdgeInsets.symmetric(horizontal: 10),
                                                 child: TextButton(
@@ -418,6 +432,15 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                                     textStyle: const TextStyle(fontSize: 20),
                                                   ),
                                                   onPressed: () {
+                                                    /*Fluttertoast.showToast(
+                                                        msg: "valeur : ${(liste[index].beanarticle.articlerestant - _achatController.taskData.map((element) => element.idart == liste[index].beanarticle.idart ? 1 : 0).reduce((value, element) => value + element))}",
+                                                        toastLength: Toast.LENGTH_SHORT,
+                                                        gravity: ToastGravity.CENTER,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor: Colors.red,
+                                                        textColor: Colors.white,
+                                                        fontSize: 16.0
+                                                    );*/
                                                     _achatController.addData(liste[index].beanarticle.idart);
                                                   },
                                                   child: const Text('+'),
