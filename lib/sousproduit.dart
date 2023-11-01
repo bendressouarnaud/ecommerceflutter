@@ -118,7 +118,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
 
       case 5:
         // Display Porduct whose name is familiar to the one requested by user :
-        //lookforwhatuserrequested();
+        return await lookforwhatuserrequested();
         break;
 
       default:
@@ -138,6 +138,33 @@ class _NewSousproduit extends State<Sousproduitecran> {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "idprd": iddet
+        }));
+
+    if(response.statusCode == 200){
+      _isLoading = true;
+      List<dynamic> body = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+      List<BeanResumeArticleDetail> posts = body
+          .map(
+            (dynamic item) => BeanResumeArticleDetail.fromJson(item),
+      )
+          .toList();
+      return posts;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  //
+  Future<List<BeanResumeArticleDetail>> lookforwhatuserrequested() async {
+    final url = Uri.parse('${dotenv.env['URL']}backendcommerce/lookforwhatuserrequested');
+
+    var response = await post(url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "id": 0,
+          "lib": lib
         }));
 
     if(response.statusCode == 200){

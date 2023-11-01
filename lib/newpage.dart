@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:newecommerce/beanproduit.dart';
 import 'package:newecommerce/panier.dart';
+import 'package:newecommerce/recherche.dart';
 import 'package:newecommerce/skeleton.dart';
 import 'package:shimmer/shimmer.dart';
 import 'carouselcustom.dart';
@@ -75,7 +76,7 @@ class _NewsPageState extends State<NewsPage> {
     final response = await get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
-      List<dynamic> body = jsonDecode(response.body);
+      List<dynamic> body = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
       List<Beanarticledetail> posts = body
           .map(
             (dynamic item) => Beanarticledetail.fromJson(item),
@@ -165,7 +166,15 @@ class _NewsPageState extends State<NewsPage> {
               })
           ),
           IconButton(
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return SearchEcran();
+                    }
+                    )
+                );
+              },
               icon: const Icon(Icons.search, color: Colors.black)
           )
         ],
