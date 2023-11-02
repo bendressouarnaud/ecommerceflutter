@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
+import 'package:http/http.dart' as https;
 import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/detail.dart';
 
@@ -22,9 +23,10 @@ class ProduitEcran extends StatelessWidget{
   // Attribute
   int idprod = 0;
   String libProd = "";
+  https.Client? client;
 
   ProduitEcran({super.key});//, required this.idprod, required this.libProd});
-  ProduitEcran.setId(this.idprod, this.libProd);
+  ProduitEcran.setId(this.idprod, this.libProd, this.client);
 
 
   // METHODS :
@@ -39,7 +41,7 @@ class ProduitEcran extends StatelessWidget{
   // Get SUB-Product :
   Future<List<Beansousproduit>> sousproduitLoading() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobileallsousproduitsbyidprd');
-    var response = await post(url,
+    var response = await client!.post(url,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
         "idprd": idprod
@@ -63,7 +65,7 @@ class ProduitEcran extends StatelessWidget{
   // Get SUB-Product :
   Future<List<Beansousproduitarticle>> getSousProduitArticle() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobileallsousproduitsarticles');
-    var response = await post(url,
+    var response = await client!.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "idprd": idprod
@@ -132,7 +134,7 @@ class ProduitEcran extends StatelessWidget{
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) {
-                                      return DetailEcran.setId(listeSousProduit[index].idspr, listeSousProduit[index].libelle);
+                                      return DetailEcran.setId(listeSousProduit[index].idspr, listeSousProduit[index].libelle, client);
                                     }
                                     ));
                               },

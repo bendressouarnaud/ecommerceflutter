@@ -9,11 +9,14 @@ import 'package:newecommerce/produit.dart';
 import 'article.dart';
 import 'beanproduit.dart';
 import 'httpbeans/beanarticledetail.dart';
+import 'package:http/http.dart' as https;
+
 
 class CarouselInterface extends StatelessWidget{
-  const CarouselInterface({super.key, required this.liste});
+  const CarouselInterface({super.key, required this.liste, required this.client});
 
   final List<Produit> liste;
+  final https.Client client;
 
   @override
   Widget build(BuildContext context){
@@ -26,7 +29,7 @@ class CarouselInterface extends StatelessWidget{
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return ProduitEcran.setId(liste[itemIndex].idprd, liste[itemIndex].libelle);
+                  return ProduitEcran.setId(liste[itemIndex].idprd, liste[itemIndex].libelle, client);
                 }
                 ));
           },
@@ -64,8 +67,9 @@ class CarouselInterface extends StatelessWidget{
 
 class ProduitInterface extends StatelessWidget{
 
-  const ProduitInterface({super.key, required this.liste});
+  const ProduitInterface({super.key, required this.liste, required this.client});
   final List<Produit> liste;
+  final https.Client client;
 
   @override
   Widget build(BuildContext context){
@@ -81,7 +85,7 @@ class ProduitInterface extends StatelessWidget{
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return ProduitEcran.setId(liste[index].idprd, liste[index].libelle);
+                  return ProduitEcran.setId(liste[index].idprd, liste[index].libelle, client);
               }
             ));
           },
@@ -184,30 +188,32 @@ class GridViewLastProduct extends StatelessWidget{
           child: Container(
             padding: const EdgeInsets.all(3),
             color: customColor,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  width: MediaQuery.of(context).size.width,
-                  height: 160,
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media",
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.fill,
+            //height: 450,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                      padding: const EdgeInsets.all(5),
+                      width: MediaQuery.of(context).size.width,
+                      height: 160,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media",
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    placeholder: (context, url) => const CircularProgressIndicator(
-                      color: Colors.amber,
-                    ),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                  )
-                  /*decoration: BoxDecoration(
+                        placeholder: (context, url) => const CircularProgressIndicator(
+                          color: Colors.amber,
+                        ),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                      )
+                    /*decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
                               "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${item.lienweb}?alt=media"
@@ -215,36 +221,43 @@ class GridViewLastProduct extends StatelessWidget{
                           fit: BoxFit.fill
                       )
                   ),*/
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(item.libelle.length > 23 ?
-                  "${item.libelle.substring(0,17)} ..." : item.libelle,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold
-                      )
                   ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("${formatPrice(item.prix)} FCFA",
-                    textAlign: TextAlign.start,
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  child: Align(
+                  Container(
+                    height: 18,
+                    //color: Colors.amber[100],
                     alignment: Alignment.centerLeft,
-                    child: Text("${item.articlerestant} élément(s) restant(s)",
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                          fontSize: 12
-                      ),
+                    child: Text(item.libelle.length > 23 ?
+                    "${item.libelle.substring(0,17)} ..." : item.libelle,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold
+                        )
                     ),
                   ),
-                )
+                  Container(
+                    height: 18,
+                    //color: Colors.red[100],
+                    alignment: Alignment.centerLeft,
+                    child: Text("${formatPrice(item.prix)} FCFA",
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  Container(
+                    //color: Colors.blue[100],
+                    height: 18,
+                    margin: const EdgeInsets.only(top: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("${item.articlerestant} élément(s) restant(s)",
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(
+                            fontSize: 12
+                        ),
+                      ),
+                    ),
+                  )
 
-              ],
+                ],
+              ),
             ),
           ),
         );

@@ -17,15 +17,17 @@ import 'httpbeans/beansousproduit.dart';
 import 'httpbeans/beansousproduitarticle.dart';
 import 'httpbeans/detailbean.dart';
 import 'newpage.dart';
+import 'package:http/http.dart' as https;
 
 class DetailEcran extends StatelessWidget{
 
   // Attribute
   int idSprod = 0;
   String libSProd = "";
+  https.Client? client;
 
   DetailEcran({super.key});//, required this.idprod, required this.libProd});
-  DetailEcran.setId(this.idSprod, this.libSProd);
+  DetailEcran.setId(this.idSprod, this.libSProd, this.client);
 
 
   // METHODS :
@@ -40,7 +42,7 @@ class DetailEcran extends StatelessWidget{
   // Get SUB-Product :
   Future<List<Detail>> getmobilealldetailsbyidspr() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobilealldetailsbyidspr');
-    var response = await post(url,
+    var response = await client!.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "idprd": idSprod
@@ -63,7 +65,7 @@ class DetailEcran extends StatelessWidget{
   // Get SUB-Product :
   Future<List<Beansousproduitarticle>> getmobilealldetailsarticles() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobilealldetailsarticles');
-    var response = await post(url,
+    var response = await client!.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "idprd": idSprod
@@ -133,7 +135,7 @@ class DetailEcran extends StatelessWidget{
                                       context,
                                       MaterialPageRoute(builder: (context)
                                       {
-                                        return Sousproduitecran.setId(3, listeDetail[index].iddet, listeDetail[index].libelle);
+                                        return Sousproduitecran.setParams(3, listeDetail[index].iddet, listeDetail[index].libelle, client);
                                       }
                                       )
                                   );

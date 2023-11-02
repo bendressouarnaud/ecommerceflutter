@@ -25,6 +25,7 @@ import 'httpbeans/commune.dart';
 import 'models/user.dart';
 import 'newpage.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:http/http.dart' as https;
 
 
 class Sousproduitecran extends StatefulWidget {
@@ -33,9 +34,11 @@ class Sousproduitecran extends StatefulWidget {
   int mode = 0;
   int iddet = 0;
   String lib = "";
+  https.Client? client;
 
   Sousproduitecran({Key? key}) : super(key: key);
   Sousproduitecran.setId(this.mode, this.iddet, this.lib);
+  Sousproduitecran.setParams(this.mode, this.iddet, this.lib, this.client);
 
   @override
   State<Sousproduitecran> createState() => _NewSousproduit();
@@ -65,6 +68,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
   late BuildContext dialogContext;
   bool flagSendData = false;
   bool flagReady = false;
+  late https.Client client;
 
   //
   late int mode;
@@ -91,6 +95,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
     mode = widget.mode;
     iddet = widget.iddet;
     lib = widget.lib;
+    client = widget.client!;
 
     _achatRepository.findAllAchatByActif("0");
   }
@@ -134,7 +139,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
   Future<List<BeanResumeArticleDetail>> getarticlesbasedoniddet() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getarticlesbasedoniddet');
 
-    var response = await post(url,
+    var response = await client.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "idprd": iddet
@@ -160,7 +165,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
   Future<List<BeanResumeArticleDetail>> lookforwhatuserrequested() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/lookforwhatuserrequested');
 
-    var response = await post(url,
+    var response = await client.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "id": 0,
@@ -295,7 +300,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
                             width: 110,
                             height: 110,
                             //color: Colors.green,
-                            margin: EdgeInsets.only(left: 5, top: 5),
+                            margin: const EdgeInsets.only(left: 5, top: 5),
                             child: CachedNetworkImage(
                               /*width: 50,
                               height: 50,*/
@@ -320,7 +325,9 @@ class _NewSousproduit extends State<Sousproduitecran> {
                               padding: const EdgeInsets.only(left: 10),
                               child: Column(
                                 children: [
-                                  Align(
+                                  Container(
+                                    height: 28,
+                                    //color: Colors.amber[100],
                                     alignment: Alignment.topLeft,
                                     child: Text(
                                         liste[index].beanarticle.libelle.toLowerCase().length > 25 ?
@@ -331,7 +338,9 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                         )
                                     ),
                                   ),
-                                  Align(
+                                  Container(
+                                    height: 28,
+                                    //color: Colors.blueGrey[100],
                                     alignment: Alignment.topLeft,
                                     child: Text('${ formatPrice(liste[index].beanarticle.reduction > 0 ?
                                     (liste[index].beanarticle.prix-
@@ -344,6 +353,8 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                     ),
                                   ),
                                   Container(
+                                    height: 26,
+                                    //color: Colors.deepOrange[100],
                                     margin: const EdgeInsets.only(top: 10),
                                     child: liste[index].beanarticle.reduction > 0 ? Row(
                                       children: [
@@ -365,7 +376,9 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                     ) :
                                     Container(height: 10,),
                                   ),
-                                  Align(
+                                  Container(
+                                    height: 26,
+                                    //color: Colors.red[100],
                                     alignment: Alignment.topLeft,
                                     child: Text('${liste[index].beanarticle.articlerestant -
                                         (_achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart == liste[index].beanarticle.idart ? 1 : 0)
@@ -375,7 +388,9 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                         )
                                     ),
                                   ),
-                                  const Align(
+                                  Container(
+                                    height: 26,
+                                    //color: Colors.yellow[100],
                                     alignment: Alignment.topLeft,
                                     child: Row(
                                       children: [

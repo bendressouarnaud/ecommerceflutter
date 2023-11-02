@@ -13,6 +13,7 @@ import 'package:shimmer/shimmer.dart';
 import 'carouselcustom.dart';
 import 'constants.dart';
 import 'package:http/http.dart';
+import 'package:http/http.dart' as https;
 import 'package:http/src/response.dart' as mreponse;
 
 import 'ecrancommande.dart';
@@ -24,7 +25,8 @@ import 'package:badges/badges.dart' as badges;
 
 
 class NewsPage extends StatefulWidget {
-  const NewsPage({Key? key}) : super(key: key);
+  final https.Client client;
+  const NewsPage({Key? key, required this.client}) : super(key: key);
 
   @override
   State<NewsPage> createState() => _NewsPageState();
@@ -38,12 +40,15 @@ class _NewsPageState extends State<NewsPage> {
   int callNumber = 0;
   int currentPageIndex = 0;
   final AchatGetController _achatController = Get.put(AchatGetController());
+  //
+  late https.Client client;
 
 
   // M e t h o d  :
   @override
   void initState() {
     _isLoading = true;
+    client = widget.client;
     Future.delayed(const Duration(milliseconds: 1000), () {
       _achatController.refreshMainInterface();
     });
@@ -53,7 +58,7 @@ class _NewsPageState extends State<NewsPage> {
   // Get Products :
   Future<List<Produit>> produitLoading() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobileAllProduits');
-    mreponse.Response response = await get(url);
+    mreponse.Response response = await client.get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
       List<dynamic> body = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
@@ -73,7 +78,7 @@ class _NewsPageState extends State<NewsPage> {
   // Get Recent Added Products :
   Future<List<Beanarticledetail>> recentProduitLoading() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobilerecentarticles');
-    final response = await get(url);
+    final response = await client.get(url);
     if(response.statusCode == 200){
       _isLoading = ++callNumber == 2 ? false : true;
       List<dynamic> body = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
@@ -189,7 +194,7 @@ class _NewsPageState extends State<NewsPage> {
                 List<Beanarticledetail> bl =  snapshot.data[1];
                 return Column(
                   children: [
-                    CarouselInterface(liste: pt),
+                    CarouselInterface(liste: pt, client: client),
                     Container(
                       alignment: Alignment.topLeft,
                       margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -206,7 +211,7 @@ class _NewsPageState extends State<NewsPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 170,
-                      child: ProduitInterface(liste: pt),
+                      child: ProduitInterface(liste: pt, client: client),
                     ),
                     Container(
                       alignment: Alignment.topLeft,
@@ -222,7 +227,7 @@ class _NewsPageState extends State<NewsPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 810,
+                      height: 770,//810,
                       //color: Colors.amber,
                       width: MediaQuery.of(context).size.width,
                       child: GridViewLastProduct(liste: bl),
@@ -318,11 +323,14 @@ class NewsCardSkelton extends StatelessWidget {
   Widget build(BuildContext context) => Shimmer.fromColors(
       baseColor: Colors.black,
       highlightColor: Colors.grey[500]!,
-      child: const Row(
+      child: Row(
         children: [
-          Skeleton(height: 120, width: 120),
-          SizedBox(width: defaultPadding),
-          Expanded(
+          Container(
+            margin: const EdgeInsets.only(left: 10),
+            child: const Skeleton(height: 120, width: 120),
+          ),
+          const SizedBox(width: defaultPadding),
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
