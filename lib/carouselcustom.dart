@@ -148,11 +148,12 @@ class ProduitInterface extends StatelessWidget{
 
 
 class GridViewLastProduct extends StatelessWidget{
-  const GridViewLastProduct({super.key, required this.liste});
+  const GridViewLastProduct({super.key, required this.liste, required this.client});
 
   // Attributes  :
   final customColor = const Color(0xFFDEDDE3);
   final List<Beanarticledetail> liste;
+  final https.Client client;
 
 
   // METHOD :
@@ -180,7 +181,7 @@ class GridViewLastProduct extends StatelessWidget{
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return ArticleEcran.setId(item.idart, 0, 0);
+                  return ArticleEcran.setId(item.idart, 0, 0, client);
                 }
                 )
             );

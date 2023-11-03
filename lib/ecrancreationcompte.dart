@@ -18,9 +18,12 @@ import 'httpbeans/beancustomercreation.dart';
 import 'httpbeans/commune.dart';
 import 'models/user.dart';
 import 'newpage.dart';
+import 'package:http/http.dart' as https;
+
 
 class EcranCreationCompte extends StatefulWidget {
-  const EcranCreationCompte({Key? key}) : super(key: key);
+  const EcranCreationCompte({Key? key, required this.client}) : super(key: key);
+  final https.Client client;
 
   @override
   State<EcranCreationCompte> createState() => _NewCreationState();
@@ -47,14 +50,25 @@ class _NewCreationState extends State<EcranCreationCompte> {
   bool flagSendData = false;
   //
   final UserGetController _userController = Get.put(UserGetController());
+  late https.Client client;
 
 
 
-  // M e t h o d  :
+  // M E T H O D S
+  @override
+  void initState() {
+    super.initState();
+
+    client = widget.client!;
+    /*Future.delayed(const Duration(milliseconds: 1000), () {
+    });*/
+  }
+
+
   // Get VILLE :
   Future<List<Commune>> communeLoading() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobileAllCommunes');
-    mreponse.Response response = await get(url);
+    mreponse.Response response = await client.get(url);
     if(response.statusCode == 200){
       _isLoading = true;
       List<dynamic> body = jsonDecode(response.body);
@@ -63,6 +77,16 @@ class _NewCreationState extends State<EcranCreationCompte> {
             (dynamic item) => Commune.fromJson(item),
       )
           .toList();
+
+      // Update COMMUNE :
+      nomController = TextEditingController(text: _userController.userData.isNotEmpty ? _userController.userData[0].nom : '');
+      prenomController = TextEditingController(text: _userController.userData.isNotEmpty ? _userController.userData[0].prenom : '');
+      emailController = TextEditingController(text: _userController.userData.isNotEmpty ? _userController.userData[0].email : '');
+      numeroController = TextEditingController(text: _userController.userData.isNotEmpty ? _userController.userData[0].numero : '');
+      adresseController = TextEditingController(text: _userController.userData.isNotEmpty ? _userController.userData[0].adresse : '');
+      defaultGenre = _userController.userData.isNotEmpty ? (_userController.userData[0].genre==1 ? "M" : "F") : "M";
+      dropdownvalue = _userController.userData.isNotEmpty ? posts.where((e) => e.idcom==_userController.userData[0].commune).first.libelle :
+        posts[0].libelle;
       return posts;
     } else {
       // If the server did not return a 200 OK response,
@@ -71,13 +95,21 @@ class _NewCreationState extends State<EcranCreationCompte> {
     }
   }
 
+  // Process :
+  bool checkField(){
+    if(nomController.text.isEmpty || prenomController.text.isEmpty || emailController.text.isEmpty || adresseController.text.isEmpty){
+      return true;
+    }
+    return false;
+  }
+
   // Send Account DATA :
   Future<void> sendAccountRequest(int commune, int genre) async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/managecustomer');
-    var response = await post(url,
+    var response = await client.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          "idcli": 0,
+          "idcli": _userController.userData.isNotEmpty ? _userController.userData[0].idcli : 0,
           "nom": nomController.text,
           "prenom": prenomController.text,
           "email": emailController.text,
@@ -298,7 +330,9 @@ class _NewCreationState extends State<EcranCreationCompte> {
                                     style: TextStyle(
                                         color: Colors.white
                                     )),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
                                 icon: const Icon(
                                   Icons.arrow_back_ios_new,
                                   size: 20,
@@ -315,19 +349,31 @@ class _NewCreationState extends State<EcranCreationCompte> {
                                     )
                                   ),
                                 onPressed: () {
-                                  // Get 'COMMUNE' id
-                                  var idComm = pt.where((d) => d.libelle==dropdownvalue).first.idcom;
-                                  // Get 'Genre' id :
-                                  var idGenr = defaultGenre == "M" ? 1 : 0;
-                                  showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        dialogContext = context;
-                                        return const AlertDialog(
-                                          title: Text('Information'),
-                                          content: Text("Veuillez patienter ..."),
-                                          /*actions: <Widget>[
+                                  if(checkField()){
+                                    Fluttertoast.showToast(
+                                        msg: "Veuillez renseigner les champs !",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
+                                  }
+                                  else{
+                                    // Get 'COMMUNE' id
+                                    var idComm = pt.where((d) => d.libelle==dropdownvalue).first.idcom;
+                                    // Get 'Genre' id :
+                                    var idGenr = defaultGenre == "M" ? 1 : 0;
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          dialogContext = context;
+                                          return const AlertDialog(
+                                            title: Text('Information'),
+                                            content: Text("Veuillez patienter ..."),
+                                            /*actions: <Widget>[
                                           TextButton(
                                             onPressed: () => Navigator.pop(context, 'Cancel'),
                                             child: const Text('Cancel'),
@@ -337,34 +383,35 @@ class _NewCreationState extends State<EcranCreationCompte> {
                                             child: const Text('OK'),
                                           ),
                                         ]*/
-                                        );
-                                      }
-                                  );
-
-                                  // Send DATA :
-                                  flagSendData = true;
-                                  sendAccountRequest(idComm, idGenr);
-
-                                  // Run TIMER :
-                                  Timer.periodic(
-                                    const Duration(seconds: 1),
-                                        (timer) {
-                                      // Update user about remaining time
-                                      if(!flagSendData){
-                                        Navigator.pop(dialogContext);
-                                        timer.cancel();
-
-                                        // Kill ACTIVITY :
-                                        if(Navigator.canPop(context)){
-                                          Navigator.pop(context);
-                                          //Navigator.of(context).pop({'selection': '1'});
+                                          );
                                         }
-                                        /*else{
+                                    );
+
+                                    // Send DATA :
+                                    flagSendData = true;
+                                    sendAccountRequest(idComm, idGenr);
+
+                                    // Run TIMER :
+                                    Timer.periodic(
+                                      const Duration(seconds: 1),
+                                          (timer) {
+                                        // Update user about remaining time
+                                        if(!flagSendData){
+                                          Navigator.pop(dialogContext);
+                                          timer.cancel();
+
+                                          // Kill ACTIVITY :
+                                          if(Navigator.canPop(context)){
+                                            Navigator.pop(context);
+                                            //Navigator.of(context).pop({'selection': '1'});
+                                          }
+                                          /*else{
                                           SystemNavigator.pop();
                                         }*/
-                                      }
-                                    },
-                                  );
+                                        }
+                                      },
+                                    );
+                                  }
                                 },
                                 icon: const Icon(
                                   Icons.save,

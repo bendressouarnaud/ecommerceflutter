@@ -232,7 +232,7 @@ class DetailEcran extends StatelessWidget{
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(builder: (context) {
-                                                        return ArticleEcran.setId(item.idart, 0, 0);
+                                                        return ArticleEcran.setId(item.idart, 0, 0, client);
                                                       }
                                                       )
                                                   );

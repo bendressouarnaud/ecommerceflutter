@@ -25,16 +25,18 @@ import 'httpbeans/beanreponsepanier.dart';
 import 'httpbeans/responsebooking.dart';
 import 'models/user.dart';
 import 'newpage.dart';
+import 'package:http/http.dart' as https;
+
 
 
 class Paniercran extends StatefulWidget {
 
   // Attribute
-
+  final https.Client client;
 
 
   // METHODS :
-  const Paniercran({Key? key}) : super(key: key);
+  const Paniercran({Key? key, required this.client}) : super(key: key);
 
   @override
   State<Paniercran> createState() => _NewPanier();
@@ -53,6 +55,7 @@ class _NewPanier extends State<Paniercran> {
   late BuildContext dialogContextWaiting;
   bool flagSendData = false;
   User? usr;
+  late https.Client client;
 
 
 
@@ -69,6 +72,8 @@ class _NewPanier extends State<Paniercran> {
 
   @override
   void initState(){
+
+    client = widget.client;
 
     // Pick User Id :
     _userRepository.getConnectedUser().then((value) {
@@ -101,7 +106,7 @@ class _NewPanier extends State<Paniercran> {
 
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getarticledetailspanier');
 
-    var response = await post(url,
+    var response = await client.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "articleid": finalListe
@@ -127,7 +132,7 @@ class _NewPanier extends State<Paniercran> {
   sendbooking() async {
 
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/sendbooking');
-    var response = await post(url,
+    var response = await client.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "liste": _achatController.listePanier,

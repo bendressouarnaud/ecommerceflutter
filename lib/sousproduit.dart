@@ -217,7 +217,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) {
-                              return const Paniercran();
+                              return Paniercran(client: client);
                             }
                             )
                         );
@@ -233,7 +233,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
-                        return const Paniercran();
+                        return Paniercran(client: client);
                       }
                       )
                   );
@@ -282,7 +282,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
-                          return ArticleEcran.setId(liste[index].beanarticle.idart, 0, 0);
+                          return ArticleEcran.setId(liste[index].beanarticle.idart, 0, 0, client);
                         }
                         )
                     );

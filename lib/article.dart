@@ -17,6 +17,7 @@ import 'httpbeans/beanarticledatahistory.dart';
 import 'newpage.dart';
 
 import 'package:badges/badges.dart' as badges;
+import 'package:http/http.dart' as https;
 
 
 class ArticleEcran extends StatefulWidget {
@@ -25,9 +26,10 @@ class ArticleEcran extends StatefulWidget {
   int idart = 0;
   int fromadapter = 0;
   int qte = 0;
+  https.Client? client;
 
   ArticleEcran({Key? key}) : super(key: key);
-  ArticleEcran.setId(this.idart, this.fromadapter, this.qte);
+  ArticleEcran.setId(this.idart, this.fromadapter, this.qte, this.client);
 
   @override
   State<ArticleEcran> createState() => _NewArticle();
@@ -38,6 +40,7 @@ class _NewArticle extends State<ArticleEcran> {
   // A T T R I B U T E S
   late int idart;
   final AchatGetController _achatController = Get.put(AchatGetController());
+  late https.Client client;
 
 
 
@@ -47,12 +50,13 @@ class _NewArticle extends State<ArticleEcran> {
     super.initState();
 
     idart = widget.idart;
+    client = widget.client!;
   }
 
   Future<Beanarticledatahistory> getmobilearticleinformationbyidart() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobilearticleinformationbyidart');
 
-    var response = await post(url,
+    var response = await client.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "idart": idart,
@@ -111,7 +115,7 @@ class _NewArticle extends State<ArticleEcran> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
-                        return const Paniercran();
+                        return Paniercran(client: client);
                       }
                       )
                   );

@@ -164,7 +164,7 @@ class _NewsPageState extends State<NewsPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) {
-                      return const Paniercran();
+                      return Paniercran(client: client);
                     }
                     )
                 );
@@ -230,7 +230,7 @@ class _NewsPageState extends State<NewsPage> {
                       height: 770,//810,
                       //color: Colors.amber,
                       width: MediaQuery.of(context).size.width,
-                      child: GridViewLastProduct(liste: bl),
+                      child: GridViewLastProduct(liste: bl, client: client),
                     )
                   ],
                 );
@@ -247,7 +247,7 @@ class _NewsPageState extends State<NewsPage> {
           ),
         ),
         CommandeEcran(),
-        const EcranCompte(),
+        EcranCompte(client: client),
       ][currentPageIndex]
       /*SingleChildScrollView(
         child: FutureBuilder(

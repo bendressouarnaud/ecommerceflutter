@@ -8,6 +8,7 @@ import 'package:newecommerce/beanproduit.dart';
 import 'package:newecommerce/blocs/user_bloc.dart';
 import 'package:newecommerce/skeleton.dart';
 import 'package:shimmer/shimmer.dart';
+import 'authentification.dart';
 import 'carouselcustom.dart';
 import 'constants.dart';
 import 'package:http/http.dart';
@@ -16,9 +17,13 @@ import 'ecrancreationcompte.dart';
 import 'getxcontroller/getusercontroller.dart';
 import 'httpbeans/beanarticledetail.dart';
 import 'models/user.dart';
+import 'package:http/http.dart' as https;
+
+
 
 class EcranCompte extends StatefulWidget {
-  const EcranCompte({Key? key}) : super(key: key);
+  const EcranCompte({Key? key, required this.client}) : super(key: key);
+  final https.Client client;
 
   @override
   State<EcranCompte> createState() => _NewEcranState();
@@ -36,12 +41,15 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
   String selection = "";
   //
   final UserGetController _userController = Get.put(UserGetController());
+  late https.Client client;
 
 
 
   // M e t h o d  :
   @override
   void initState() {
+    client = widget.client;
+
     Future.delayed(const Duration(milliseconds: 400), () {
       _userController.refreshMainInterface();
     });
@@ -78,7 +86,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
   Future _buttonTapped() async {
     Map results =  await Navigator.of(context).push(MaterialPageRoute<dynamic>(
       builder: (BuildContext context) {
-        return const EcranCreationCompte();
+        return EcranCreationCompte(client: client);
       },
     ));
 
@@ -166,7 +174,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
                                   context,
                                   MaterialPageRoute(builder:
                                       (context) =>
-                                  const EcranCreationCompte()
+                                  EcranCreationCompte(client: client)
                                   ));
 
                             },
@@ -207,6 +215,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
                 height: 15,
               ),
               Container(
+                height: 40,
                 color: Colors.white,
                 margin: const EdgeInsets.only(right: 7, left: 7),
                 child: const Row(
@@ -234,6 +243,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
                 ),
               ),
               Container(
+                height: 40,
                 color: Colors.white,
                 margin: const EdgeInsets.only(right: 7, left: 7),
                 child: const Row(
@@ -261,6 +271,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
                 ),
               ),
               Container(
+                height: 40,
                 color: Colors.white,
                 margin: const EdgeInsets.only(right: 7, left: 7),
                 child: const Row(
@@ -286,6 +297,33 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
                       ),
                     ]
                 ),
+              ),
+              const SizedBox(
+                height: 70,
+              ),
+              Container(
+                alignment: Alignment.center,
+                child: GetBuilder<UserGetController>(
+                  builder: (_) {
+                    return _userController.userData.isEmpty ? GestureDetector(
+                      onTap: () {
+                        // Display
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return AuthentificationEcran(client: client);
+                            }
+                            ));
+                      },
+                      child: Text("Vous possédez déjà un compte ?",
+                        style: TextStyle(
+                            color: Colors.deepOrange[600],
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ) : Container();
+                  },
+                )
               )
             ],
           ),
