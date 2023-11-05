@@ -70,6 +70,55 @@ class _NewPanier extends State<Paniercran> {
   }
 
 
+  // Display DIALOG Box :
+  void displayAlert() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          //dialogContext = context;
+          return AlertDialog(
+            title: const Text('Information'),
+            content: const Text("Confirmer la suppression de cet article ?"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'Cancel'),
+                child: const Text('NON'),
+              ),
+              TextButton(
+                onPressed: () {
+
+                  // Run TIMER :
+                  Timer.periodic(
+                    const Duration(seconds: 1),
+                        (timer) {
+                      // Update user about remaining time
+                      if(!flagSendData){
+                        Navigator.pop(dialogContext);
+                        timer.cancel();
+
+                        // Kill ACTIVITY :
+                        if(Navigator.canPop(context)){
+                          Navigator.pop(context);
+                          //Navigator.of(context).pop({'selection': '1'});
+                        }
+                        /*else{
+                                          SystemNavigator.pop();
+                                        }*/
+                      }
+                    },
+                  );
+
+                },
+                child: const Text('OUI'),
+              ),
+            ]
+          );
+        }
+    );
+  }
+
+
   @override
   void initState(){
 
@@ -522,17 +571,28 @@ class _NewPanier extends State<Paniercran> {
                                                   padding: const EdgeInsets.only(left: 5, right: 5),
                                                   child: Row(
                                                     children: [
-                                                      const Icon(
-                                                        Icons.delete_outline,
-                                                        color: Colors.deepOrange,
-                                                        size: 30,
+                                                      GestureDetector(
+                                                        onTap: (){
+
+                                                        },
+                                                        child: const Icon(
+                                                          Icons.delete_outline,
+                                                          color: Colors.deepOrange,
+                                                          size: 30,
+                                                        ),
                                                       ),
                                                       const SizedBox(
                                                         width: 10,
                                                       ),
-                                                      const Text('SUPPR.',
-                                                        style: TextStyle(
-                                                          color: Colors.deepOrange,
+                                                      GestureDetector(
+                                                        onTap: (){
+                                                          // Delete ALL the ARTICLE command :
+
+                                                        },
+                                                        child: const Text('SUPPR.',
+                                                          style: TextStyle(
+                                                            color: Colors.deepOrange,
+                                                          ),
                                                         ),
                                                       ),
                                                       Expanded(
