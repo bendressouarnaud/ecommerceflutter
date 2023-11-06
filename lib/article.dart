@@ -190,9 +190,11 @@ class _NewArticle extends State<ArticleEcran> {
                                               textStyle: const TextStyle(fontSize: 20),
                                             ),
                                             onPressed: () {
-                                              _achatController.addData(idart);
+                                              if(article.nombrearticle > 0) {
+                                                _achatController.addData(idart);
+                                              }
                                             },
-                                            child: const Text('Acheter'),
+                                            child: Text(article.nombrearticle > 0 ? 'Acheter' : 'Epuisé'),
                                           ),
                                         ),
                                       )

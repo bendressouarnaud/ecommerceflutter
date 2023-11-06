@@ -100,4 +100,30 @@ class AchatGetController extends GetxController {
     );
   }
 
+  // Delete :
+  Future<int> deleteAchatByIdart(int idart) async {
+    //taskData.clear();
+    int ret = await _achatRepository.deleteAchatByIdartAndActif(idart);
+    //_getData();
+    // CLEAR :
+    List<int> tp = [];
+
+    for (var i = 0; i < taskData.length; i++) { //for(Achat at in taskData){
+      if(idart == taskData[i].idart) {
+        tp.add(taskData[i].idach);
+        /*int iDex = taskData.indexWhere((achat) => achat.idart == idart);
+        if (iDex > -1) {
+          taskData.removeAt(iDex);
+        }*/
+      }
+    }
+
+    // Clean :
+    for(int vl in tp){
+      taskData.removeAt(taskData.indexWhere((achat) => achat.idach == vl));
+    }
+    update();
+    return ret;
+  }
+
 }

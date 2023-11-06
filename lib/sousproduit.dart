@@ -503,11 +503,11 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                                         textStyle: const TextStyle(fontSize: 20),
                                                       ),
                                                       onPressed: () {
-                                                        _achatController.addData(liste[index].beanarticle.idart);
-                                                        /*setState(() {
-                                                          });*/
+                                                        if(liste[index].beanarticle.articlerestant > 0){
+                                                          _achatController.addData(liste[index].beanarticle.idart);
+                                                        }
                                                       },
-                                                      child: const Text('Acheter'),
+                                                      child: Text(liste[index].beanarticle.articlerestant > 0 ? 'Acheter' : 'Epuisé'),
                                                     )
                                                 )
                                             ),

@@ -99,6 +99,13 @@ class AchatDao {
     return result;
   }
 
+  // Delete ACHAT by idart and actif= 1
+  Future<int> deleteAchatByIdartAndActif(int idart) async {
+    final db = await dbProvider.database;
+    var result = await db.delete("achat", where: 'idart = ? and actif = 1', whereArgs: [idart]);
+    return result;
+  }
+
   //We are not going to use this in the demo
   Future deleteAllAchats() async {
     final db = await dbProvider.database;

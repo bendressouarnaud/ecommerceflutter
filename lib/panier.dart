@@ -54,8 +54,10 @@ class _NewPanier extends State<Paniercran> {
   late BuildContext dialogContextPaiement;
   late BuildContext dialogContextWaiting;
   bool flagSendData = false;
+  bool flagDeleteData = false;
   User? usr;
   late https.Client client;
+  late BuildContext dialogContext;
 
 
 
@@ -70,13 +72,26 @@ class _NewPanier extends State<Paniercran> {
   }
 
 
+  // Delete ACHAT
+  void deleteAchat(int idart) async{
+    await _achatController.deleteAchatByIdart(idart).then((value) {
+      if(value > 0){
+        // Notify :
+        flagDeleteData = false;
+      }
+    });
+  }
+
+
+
+
   // Display DIALOG Box :
-  void displayAlert() {
+  void displayAlert(int idart) {
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          //dialogContext = context;
+          dialogContext = context;
           return AlertDialog(
             title: const Text('Information'),
             content: const Text("Confirmer la suppression de cet article ?"),
@@ -88,23 +103,30 @@ class _NewPanier extends State<Paniercran> {
               TextButton(
                 onPressed: () {
 
+                  // Send DATA :
+                  flagDeleteData = true;
+                  deleteAchat(idart);
+
                   // Run TIMER :
                   Timer.periodic(
                     const Duration(seconds: 1),
                         (timer) {
                       // Update user about remaining time
-                      if(!flagSendData){
+                      if(!flagDeleteData){
                         Navigator.pop(dialogContext);
                         timer.cancel();
 
-                        // Kill ACTIVITY :
-                        if(Navigator.canPop(context)){
-                          Navigator.pop(context);
-                          //Navigator.of(context).pop({'selection': '1'});
+                        // if PANIER is empty, then CLOSE the INTERFACE :
+                        if(_achatController.taskData.isEmpty){
+                          // Kill ACTIVITY :
+                          if(Navigator.canPop(context)){
+                            Navigator.pop(context);
+                          }
                         }
-                        /*else{
-                                          SystemNavigator.pop();
-                                        }*/
+                        else{
+                          setState(() {
+                          });
+                        }
                       }
                     },
                   );
@@ -236,393 +258,393 @@ class _NewPanier extends State<Paniercran> {
             builder: (BuildContext contextMain, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                 List<Beanreponsepanier> liste =  snapshot.data[0];
-                return Stack(
-                  children: [
-                    Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: 50,
-                        child: Container(
-                          color: bottombararticle,
-                          width: MediaQuery.of(contextMain).size.width,
-                          padding: const EdgeInsets.all(10),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  //barrierDismissible: false,
-                                  context: context,
-                                  builder: (BuildContext ctP) {
-                                    dialogContextPaiement = ctP;
-                                    return AlertDialog(
-                                      title: const Text('Mode de paiement',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      content: Container(
-                                        height: 130,
-                                        child: Column(
-                                          children: [
-                                            GetBuilder<AchatGetController>(
-                                              builder: (_) {
-                                                return ListTile(
-                                                  title: const Text('À la livraison'),
-                                                  leading: Radio(
-                                                    value: 0,
-                                                    groupValue: choixpaiement,
-                                                    onChanged: (int? v) {
-                                                      choixpaiement = v!;
-                                                      _achatController.setFlag(choixpaiement);
-                                                    },
+                return GetBuilder<AchatGetController>(
+                    builder: (_){
+                      return Stack(
+                        children: [
+                          Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              height: 50,
+                              child: Container(
+                                color: bottombararticle,
+                                width: MediaQuery.of(contextMain).size.width,
+                                padding: const EdgeInsets.all(10),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        //barrierDismissible: false,
+                                          context: context,
+                                          builder: (BuildContext ctP) {
+                                            dialogContextPaiement = ctP;
+                                            return AlertDialog(
+                                                title: const Text('Mode de paiement',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                content: Container(
+                                                  height: 130,
+                                                  child: Column(
+                                                    children: [
+                                                      GetBuilder<AchatGetController>(
+                                                          builder: (_) {
+                                                            return ListTile(
+                                                              title: const Text('À la livraison'),
+                                                              leading: Radio(
+                                                                value: 0,
+                                                                groupValue: choixpaiement,
+                                                                onChanged: (int? v) {
+                                                                  choixpaiement = v!;
+                                                                  _achatController.setFlag(choixpaiement);
+                                                                },
+                                                              ),
+                                                            );
+                                                          }
+                                                      ),
+                                                      GetBuilder<AchatGetController>(
+                                                          builder: (_) {
+                                                            return ListTile(
+                                                              title: const Text('Mobile Money'),
+                                                              leading: Radio(
+                                                                value: 1,
+                                                                groupValue: choixpaiement,
+                                                                onChanged: (int? v) {
+                                                                  choixpaiement = v!;
+                                                                  _achatController.setFlag(choixpaiement);
+                                                                },
+                                                              ),
+                                                            );
+                                                          }
+                                                      )
+                                                    ],
                                                   ),
-                                                );
-                                              }
-                                            ),
-                                            GetBuilder<AchatGetController>(
-                                                builder: (_) {
-                                                  return ListTile(
-                                                    title: const Text('Mobile Money'),
-                                                    leading: Radio(
-                                                      value: 1,
-                                                      groupValue: choixpaiement,
-                                                      onChanged: (int? v) {
-                                                        choixpaiement = v!;
-                                                        _achatController.setFlag(choixpaiement);
-                                                      },
-                                                    ),
-                                                  );
-                                                }
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(dialogContextPaiement,'Cancel'),//Navigator.pop(context, 'Cancel'),
-                                            child: const Text('Annuler'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () => Navigator.pop(dialogContextPaiement,'Cancel'),//Navigator.pop(context, 'Cancel'),
+                                                    child: const Text('Annuler'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
 
-                                              // Close the previous :
-                                              Navigator.pop(dialogContextPaiement, 'OK');
+                                                      // Close the previous :
+                                                      Navigator.pop(dialogContextPaiement, 'OK');
 
-                                              showDialog(
-                                                  //barrierDismissible: false,
-                                                  context: contextMain,
-                                                  builder: (BuildContext ctI) {
-                                                    dialogContextWaiting = ctI;
-                                                    return const AlertDialog(
-                                                      title: Text('Information'),
-                                                      content: Text("Veuillez patienter ...")
-                                                    );
-                                                  }
-                                              );
-
-                                              // Send DATA :
-                                              flagSendData = true;
-                                              sendbooking();
-
-                                              var cpt = 0;
-
-                                              // Run TIMER :
-                                              Timer.periodic(
-                                                const Duration(seconds: 1),
-                                                    (timer) {
-                                                  // Update user about remaining time
-                                                  if((++cpt > 5) || !flagSendData){
-                                                    Navigator.pop(dialogContextWaiting);
-                                                    timer.cancel();
-                                                    if(cpt > 5){
-                                                      Fluttertoast.showToast(
-                                                          msg: "Impossible de traiter l'opération !",
-                                                          toastLength: Toast.LENGTH_SHORT,
-                                                          gravity: ToastGravity.CENTER,
-                                                          timeInSecForIosWeb: 1,
-                                                          backgroundColor: Colors.red,
-                                                          textColor: Colors.white,
-                                                          fontSize: 16.0
+                                                      showDialog(
+                                                        //barrierDismissible: false,
+                                                          context: contextMain,
+                                                          builder: (BuildContext ctI) {
+                                                            dialogContextWaiting = ctI;
+                                                            return const AlertDialog(
+                                                                title: Text('Information'),
+                                                                content: Text("Veuillez patienter ...")
+                                                            );
+                                                          }
                                                       );
-                                                      /*var snackBar = const SnackBar(content: Text('Impossible de traiter l\'opération !'));
+
+                                                      // Send DATA :
+                                                      flagSendData = true;
+                                                      sendbooking();
+
+                                                      var cpt = 0;
+
+                                                      // Run TIMER :
+                                                      Timer.periodic(
+                                                        const Duration(seconds: 1),
+                                                            (timer) {
+                                                          // Update user about remaining time
+                                                          if((++cpt > 5) || !flagSendData){
+                                                            Navigator.pop(dialogContextWaiting);
+                                                            timer.cancel();
+                                                            if(cpt > 5){
+                                                              Fluttertoast.showToast(
+                                                                  msg: "Impossible de traiter l'opération !",
+                                                                  toastLength: Toast.LENGTH_SHORT,
+                                                                  gravity: ToastGravity.CENTER,
+                                                                  timeInSecForIosWeb: 1,
+                                                                  backgroundColor: Colors.red,
+                                                                  textColor: Colors.white,
+                                                                  fontSize: 16.0
+                                                              );
+                                                              /*var snackBar = const SnackBar(content: Text('Impossible de traiter l\'opération !'));
                                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
-                                                    }
+                                                            }
 
-                                                    // Kill ACTIVITY :
-                                                    if(Navigator.canPop(contextMain)){
-                                                      Navigator.pop(contextMain);
-                                                    }
-                                                  }
-                                                },
-                                              );
+                                                            // Kill ACTIVITY :
+                                                            if(Navigator.canPop(contextMain)){
+                                                              Navigator.pop(contextMain);
+                                                            }
+                                                          }
+                                                        },
+                                                      );
 
-                                            },
-                                            child: const Text('OK'),
-                                          ),
-                                        ]
-                                    );
-                                  }
-                                );
-                              },
-                              child: const Text('PAYER',
-                                style: TextStyle(
-                                    color: Colors.deepOrange,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      left: 0,
-                      bottom: 50,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        physics: const ScrollPhysics(),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(left: 10, right: 10),
-                              child: const Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("RÉSUMÉ DU PANIER",
-                                  style: TextStyle(
-                                      color: Colors.grey
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(left: 10, right: 10),
-                              margin: const EdgeInsets.only(top: 10),
-                              child: Row(
-                                children: [
-                                  const Text("Sous-total",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold
+                                                    },
+                                                    child: const Text('OK'),
+                                                  ),
+                                                ]
+                                            );
+                                          }
+                                      );
+                                    },
+                                    child: const Text('PAYER',
+                                      style: TextStyle(
+                                          color: Colors.deepOrange,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18
+                                      ),
                                     ),
                                   ),
-                                  Expanded(
-                                      child: Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text('${formatPrice(liste.map((e) => e.reduction > 0 ? (e.prix-
-                                              ((e.prix * e.reduction)/100)).toInt() :
-                                          e.prix).toList().reduce((value, element) => value + element))} FCFA',
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          )
-                                      )
-                                  )
-                                ],
-                              ),
-                            ),
-                            ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
+                                ),
+                              )
+                          ),
+                          Positioned(
+                              top: 0,
+                              right: 0,
+                              left: 0,
+                              bottom: 50,
+                              child: SingleChildScrollView(
                                 scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: liste.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return GetBuilder<AchatGetController>(
-                                      builder: (_) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            // Display
-                                          },
-                                          child: Container(
-                                            margin: const EdgeInsets.all(2),
-                                            width: MediaQuery.of(context).size.width,
-                                            height: 170,
-                                            color: cardviewsousproduit,  // Colors.blueGrey
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Align(
-                                                      alignment: Alignment.topLeft,
-                                                      child: Container(
-                                                        width: 110,
-                                                        height: 110,
-                                                        //color: Colors.green,
-                                                        margin: EdgeInsets.only(left: 5, top: 1),
-                                                        child: CachedNetworkImage(
-                                                          fit: BoxFit.cover,
-                                                          imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[index].lienweb}?alt=media",
-                                                          imageBuilder: (context, imageProvider) => Container(
-                                                            decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(8.0),
-                                                              image: DecorationImage(
-                                                                image: imageProvider,
-                                                                fit: BoxFit.fill,
+                                physics: const ScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.only(left: 10, right: 10),
+                                      child: const Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text("RÉSUMÉ DU PANIER",
+                                          style: TextStyle(
+                                              color: Colors.grey
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(left: 10, right: 10),
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Row(
+                                        children: [
+                                          const Text("Sous-total",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                          Expanded(
+                                              child: Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: Text('${formatPrice(liste.map((e) => e.reduction > 0 ? (e.prix-
+                                                      ((e.prix * e.reduction)/100)).toInt() :
+                                                  e.prix).toList().reduce((value, element) => value + element))} FCFA',
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  )
+                                              )
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        itemCount: liste.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              // Display
+                                            },
+                                            child: Container(
+                                              margin: const EdgeInsets.all(2),
+                                              width: MediaQuery.of(context).size.width,
+                                              height: 170,
+                                              color: cardviewsousproduit,  // Colors.blueGrey
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Align(
+                                                        alignment: Alignment.topLeft,
+                                                        child: Container(
+                                                          width: 110,
+                                                          height: 110,
+                                                          //color: Colors.green,
+                                                          margin: EdgeInsets.only(left: 5, top: 1),
+                                                          child: CachedNetworkImage(
+                                                            fit: BoxFit.cover,
+                                                            imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[index].lienweb}?alt=media",
+                                                            imageBuilder: (context, imageProvider) => Container(
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                image: DecorationImage(
+                                                                  image: imageProvider,
+                                                                  fit: BoxFit.fill,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                          placeholder: (context, url) => const CircularProgressIndicator(),
-                                                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                        child: Container(
-                                                          padding: const EdgeInsets.only(left: 10),
-                                                          child: Column(
-                                                            children: [
-                                                              Container(
-                                                                //color: Colors.blueGrey[100],
-                                                                alignment: Alignment.topLeft,
-                                                                height: 25,
-                                                                child: Text(
-                                                                    liste[index].libelle.toLowerCase().length > 25 ?
-                                                                    "${liste[index].libelle.substring(0,20)} ..." :
-                                                                    liste[index].libelle,
-                                                                    style: const TextStyle(
-                                                                      fontSize: 18,
-
-                                                                    )
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                //color: Colors.blue[100],
-                                                                alignment: Alignment.topLeft,
-                                                                height: 25,
-                                                                child: Text('${ formatPrice(liste[index].reduction > 0 ?
-                                                                (liste[index].prix-
-                                                                    ((liste[index].prix * liste[index].reduction)/100)).toInt() :
-                                                                liste[index].prix)} FCFA',
-                                                                    style: const TextStyle(
-                                                                        fontSize: 18,
-                                                                        fontWeight: FontWeight.bold
-                                                                    )
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                //color: Colors.red[100],
-                                                                height: 25,
-                                                                margin: const EdgeInsets.only(top: 10),
-                                                                child: liste[index].reduction > 0 ? Row(
-                                                                  children: [
-                                                                    Text('${formatPrice(liste[index].prix)} FCFA',
-                                                                        style: const TextStyle(
-                                                                            decoration: TextDecoration.lineThrough
-                                                                        )
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 10,
-                                                                    ),
-                                                                    Text('-${liste[index].reduction}%',
-                                                                        style: const TextStyle(
-                                                                            color: promotioncolor,
-                                                                            fontWeight: FontWeight.bold
-                                                                        )
-                                                                    )
-                                                                  ],
-                                                                ) :
-                                                                Container(height: 25,),
-                                                              ),
-                                                              Container(
-                                                                //color: Colors.amber[100],
-                                                                alignment: Alignment.topLeft,
-                                                                height: 25,
-                                                                child: Text('${liste[index].restant} article(s) restant(s)',
-                                                                    style: const TextStyle(
-                                                                        color: Colors.grey
-                                                                    )
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                //color: Colors.deepOrange[100],
-                                                                alignment: Alignment.topLeft,
-                                                                height: 25,
-                                                                child: const Row(
-                                                                  children: [
-                                                                    Icon(
-                                                                        Icons.star_outline
-                                                                    ),
-                                                                    Icon(
-                                                                        Icons.star_outline
-                                                                    ),
-                                                                    Icon(
-                                                                        Icons.star_outline
-                                                                    ),
-                                                                    Icon(
-                                                                        Icons.star_outline
-                                                                    ),
-                                                                    Icon(
-                                                                        Icons.star_outline
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        )
-                                                    )
-                                                  ],
-                                                ),
-                                                Container(
-                                                  height: 30,
-                                                  //color: Colors.black12,
-                                                  padding: const EdgeInsets.only(left: 5, right: 5),
-                                                  child: Row(
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: (){
-
-                                                        },
-                                                        child: const Icon(
-                                                          Icons.delete_outline,
-                                                          color: Colors.deepOrange,
-                                                          size: 30,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: (){
-                                                          // Delete ALL the ARTICLE command :
-
-                                                        },
-                                                        child: const Text('SUPPR.',
-                                                          style: TextStyle(
-                                                            color: Colors.deepOrange,
+                                                            placeholder: (context, url) => const CircularProgressIndicator(),
+                                                            errorWidget: (context, url, error) => const Icon(Icons.error),
                                                           ),
                                                         ),
                                                       ),
                                                       Expanded(
-                                                          child: Align(
-                                                            alignment: Alignment.topRight,
-                                                            child: Text('${ _achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart ==
-                                                                liste[index].idart ? 1 : 0).reduce((value, element) => value + element) : 0}',
-                                                              style: const TextStyle(
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.bold
-                                                              ),
+                                                          child: Container(
+                                                            padding: const EdgeInsets.only(left: 10),
+                                                            child: Column(
+                                                              children: [
+                                                                Container(
+                                                                  //color: Colors.blueGrey[100],
+                                                                  alignment: Alignment.topLeft,
+                                                                  height: 25,
+                                                                  child: Text(
+                                                                      liste[index].libelle.toLowerCase().length > 25 ?
+                                                                      "${liste[index].libelle.substring(0,20)} ..." :
+                                                                      liste[index].libelle,
+                                                                      style: const TextStyle(
+                                                                        fontSize: 18,
+
+                                                                      )
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  //color: Colors.blue[100],
+                                                                  alignment: Alignment.topLeft,
+                                                                  height: 25,
+                                                                  child: Text('${ formatPrice(liste[index].reduction > 0 ?
+                                                                  (liste[index].prix-
+                                                                      ((liste[index].prix * liste[index].reduction)/100)).toInt() :
+                                                                  liste[index].prix)} FCFA',
+                                                                      style: const TextStyle(
+                                                                          fontSize: 18,
+                                                                          fontWeight: FontWeight.bold
+                                                                      )
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  //color: Colors.red[100],
+                                                                  height: 25,
+                                                                  margin: const EdgeInsets.only(top: 10),
+                                                                  child: liste[index].reduction > 0 ? Row(
+                                                                    children: [
+                                                                      Text('${formatPrice(liste[index].prix)} FCFA',
+                                                                          style: const TextStyle(
+                                                                              decoration: TextDecoration.lineThrough
+                                                                          )
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width: 10,
+                                                                      ),
+                                                                      Text('-${liste[index].reduction}%',
+                                                                          style: const TextStyle(
+                                                                              color: promotioncolor,
+                                                                              fontWeight: FontWeight.bold
+                                                                          )
+                                                                      )
+                                                                    ],
+                                                                  ) :
+                                                                  Container(height: 25,),
+                                                                ),
+                                                                Container(
+                                                                  //color: Colors.amber[100],
+                                                                  alignment: Alignment.topLeft,
+                                                                  height: 25,
+                                                                  child: Text('${liste[index].restant} article(s) restant(s)',
+                                                                      style: const TextStyle(
+                                                                          color: Colors.grey
+                                                                      )
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  //color: Colors.deepOrange[100],
+                                                                  alignment: Alignment.topLeft,
+                                                                  height: 25,
+                                                                  child: const Row(
+                                                                    children: [
+                                                                      Icon(
+                                                                          Icons.star_outline
+                                                                      ),
+                                                                      Icon(
+                                                                          Icons.star_outline
+                                                                      ),
+                                                                      Icon(
+                                                                          Icons.star_outline
+                                                                      ),
+                                                                      Icon(
+                                                                          Icons.star_outline
+                                                                      ),
+                                                                      Icon(
+                                                                          Icons.star_outline
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                              ],
                                                             ),
                                                           )
                                                       )
                                                     ],
                                                   ),
-                                                )
-                                              ],
+                                                  Container(
+                                                    height: 30,
+                                                    //color: Colors.black12,
+                                                    padding: const EdgeInsets.only(left: 5, right: 5),
+                                                    child: Row(
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: (){
+                                                            displayAlert(liste[index].idart);
+                                                          },
+                                                          child: const Icon(
+                                                            Icons.delete_outline,
+                                                            color: Colors.deepOrange,
+                                                            size: 30,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: (){
+                                                            // Delete ALL the ARTICLE command :
+                                                            displayAlert(liste[index].idart);
+                                                          },
+                                                          child: const Text('SUPPR.',
+                                                            style: TextStyle(
+                                                              color: Colors.deepOrange,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Expanded(
+                                                            child: Align(
+                                                              alignment: Alignment.topRight,
+                                                              child: Text('${ _achatController.taskData.isNotEmpty ? _achatController.taskData.map((element) => element.idart ==
+                                                                  liste[index].idart ? 1 : 0).reduce((value, element) => value + element) : 0}',
+                                                                style: const TextStyle(
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.bold
+                                                                ),
+                                                              ),
+                                                            )
+                                                        )
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      });
-                                }
-                            )
-
-                          ],
-                        ),
-                      )
-                    )
-                  ],
+                                          );
+                                        }
+                                    )
+                                  ],
+                                ),
+                              )
+                          )
+                        ],
+                      );
+                    }
                 );
               }
               else{

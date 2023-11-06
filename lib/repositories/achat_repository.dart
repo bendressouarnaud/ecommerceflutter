@@ -21,6 +21,7 @@ class AchatRepository {
   Future updateAchat(Achat dt) => tbDao.updateAchat(dt);
 
   Future deleteAchatById(int id) => tbDao.deleteAchatById(id);
+  Future<int> deleteAchatByIdartAndActif(int idart) => tbDao.deleteAchatByIdartAndActif(idart);
 
   Future<List<BeanActif>> findAllLive() => tbDao.findAllLive();
   Future<int> resetLiveAchat() => tbDao.resetLiveAchat();

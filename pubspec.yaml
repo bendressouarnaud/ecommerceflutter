@@ -45,6 +45,7 @@ dependencies:
   money_formatter: ^0.0.5
   get: ^4.6.6
   badges: ^3.1.2
+  firebase_messaging: ^14.7.3
   sqflite:
 
 

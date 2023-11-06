@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:newecommerce/beanproduit.dart';
+import 'package:newecommerce/getxcontroller/getusercontroller.dart';
 import 'package:newecommerce/panier.dart';
 import 'package:newecommerce/recherche.dart';
 import 'package:newecommerce/skeleton.dart';
@@ -40,6 +41,7 @@ class _NewsPageState extends State<NewsPage> {
   int callNumber = 0;
   int currentPageIndex = 0;
   final AchatGetController _achatController = Get.put(AchatGetController());
+  final UserGetController _userController = Get.put(UserGetController());
   //
   late https.Client client;
 
@@ -49,7 +51,7 @@ class _NewsPageState extends State<NewsPage> {
   void initState() {
     _isLoading = true;
     client = widget.client;
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 1200), () {
       _achatController.refreshMainInterface();
     });
     super.initState();
@@ -246,70 +248,21 @@ class _NewsPageState extends State<NewsPage> {
             },
           ),
         ),
-        CommandeEcran(),
+        _userController.userData.isNotEmpty ? CommandeEcran() :
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: const Center(
+            child: Text("Veuillez créer votre compte",
+              style: TextStyle(
+                fontSize: 17,
+                color: Colors.black
+              ),
+            ),
+          ),
+        ),
         EcranCompte(client: client),
       ][currentPageIndex]
-      /*SingleChildScrollView(
-        child: FutureBuilder(
-          future: Future.wait([produitLoading(), recentProduitLoading()]),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-              List<Produit> pt =  snapshot.data[0];
-              List<Beanarticledetail> bl =  snapshot.data[1];
-
-              return Column(
-                children: [
-                  CarouselInterface(liste: pt),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    child: const Text("Produit",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 17,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 170,
-                    child: ProduitInterface(liste: pt),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    child: const Text("Derniers produits ajoutés",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 17,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 510,
-                    width: MediaQuery.of(context).size.width,
-                    child: GridViewLastProduct(liste: bl),
-                  )
-                ],
-              );
-            } else {
-              return ListView.separated(
-                shrinkWrap: true,
-                itemCount: 5,
-                itemBuilder: (context, index) => const NewsCardSkelton(),
-                separatorBuilder: (context, index) =>
-                const SizedBox(height: defaultPadding),
-              );
-            }
-          },
-        ),
-      ),*/
     );
   }
 }
