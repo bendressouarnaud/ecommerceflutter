@@ -306,6 +306,7 @@ class _NewPanier extends State<Paniercran> {
                                                       GetBuilder<AchatGetController>(
                                                           builder: (_) {
                                                             return ListTile(
+                                                              enabled: false,
                                                               title: const Text('Mobile Money'),
                                                               leading: Radio(
                                                                 value: 1,

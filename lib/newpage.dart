@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -22,6 +24,8 @@ import 'ecrancompte.dart';
 import 'getxcontroller/getachatcontroller.dart';
 import 'httpbeans/beanarticledetail.dart';
 import 'package:badges/badges.dart' as badges;
+
+import 'main.dart';
 
 
 
@@ -47,6 +51,28 @@ class _NewsPageState extends State<NewsPage> {
 
 
   // M e t h o d  :
+  void showFlutterNotification(RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            // TODO add a proper drawable resource to android, for now using
+            //      one that already exists in example app.
+            icon: 'launch_background',
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     _isLoading = true;
@@ -54,6 +80,10 @@ class _NewsPageState extends State<NewsPage> {
     Future.delayed(const Duration(milliseconds: 1200), () {
       _achatController.refreshMainInterface();
     });
+
+    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+
+    // Init FireBase :
     super.initState();
   }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,6 +21,8 @@ import 'httpbeans/commune.dart';
 import 'models/user.dart';
 import 'newpage.dart';
 import 'package:http/http.dart' as https;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 
 class AuthentificationEcran extends StatefulWidget {
@@ -49,6 +52,8 @@ class _NewAuth extends State<AuthentificationEcran> {
   //
   final UserGetController _userController = Get.put(UserGetController());
   late https.Client client;
+  //
+  String? getToken = "";
 
 
 
@@ -70,6 +75,15 @@ class _NewAuth extends State<AuthentificationEcran> {
   }
 
 
+  //
+  void generateTokenSuscription() async {
+    await FirebaseMessaging.instance.subscribeToTopic("gouabocross");
+    getToken = await FirebaseMessaging.instance.getToken();
+
+    authenicatemobilecustomer();
+  }
+
+
   // Send Account DATA :
   Future<void> authenicatemobilecustomer() async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/authenicatemobilecustomer');
@@ -78,7 +92,7 @@ class _NewAuth extends State<AuthentificationEcran> {
         body: jsonEncode({
           "mail": emailController.text,
           "pwd": pwdController.text,
-          "fcmtoken": ""
+          "fcmtoken": getToken
         }));
 
     // Checks :
@@ -230,7 +244,13 @@ class _NewAuth extends State<AuthentificationEcran> {
 
                                 // Send DATA :
                                 flagSendData = true;
-                                authenicatemobilecustomer();
+                                if(defaultTargetPlatform == TargetPlatform.android){
+                                  generateTokenSuscription();//
+                                }
+                                else{
+                                  // Currently not running FCM for iphone
+                                  authenicatemobilecustomer();
+                                }
 
                                 // Run TIMER :
                                 Timer.periodic(

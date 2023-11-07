@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,6 +20,8 @@ import 'httpbeans/commune.dart';
 import 'models/user.dart';
 import 'newpage.dart';
 import 'package:http/http.dart' as https;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 
 class EcranCreationCompte extends StatefulWidget {
@@ -51,6 +54,8 @@ class _NewCreationState extends State<EcranCreationCompte> {
   //
   final UserGetController _userController = Get.put(UserGetController());
   late https.Client client;
+  //
+  String? getToken = "";
 
 
 
@@ -103,6 +108,14 @@ class _NewCreationState extends State<EcranCreationCompte> {
     return false;
   }
 
+  //
+  void generateTokenSuscription(int commune, int genre) async {
+    await FirebaseMessaging.instance.subscribeToTopic("gouabocross");
+    getToken = await FirebaseMessaging.instance.getToken();
+
+    sendAccountRequest(commune, genre);
+  }
+
   // Send Account DATA :
   Future<void> sendAccountRequest(int commune, int genre) async {
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/managecustomer');
@@ -117,7 +130,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
           "commune": commune,
           "adresse": adresseController.text,
           "genre": genre,
-          "fcmtoken": "",
+          "fcmtoken": _userController.userData.isEmpty ? getToken : "",
           "pwd": ""
         }));
 
@@ -389,7 +402,13 @@ class _NewCreationState extends State<EcranCreationCompte> {
 
                                     // Send DATA :
                                     flagSendData = true;
-                                    sendAccountRequest(idComm, idGenr);
+                                    if(defaultTargetPlatform == TargetPlatform.android){
+                                      generateTokenSuscription(idComm, idGenr); // FOr TOKEN
+                                    }
+                                    else{
+                                      // Currently not running FCM for iphone
+                                      sendAccountRequest(idComm, idGenr);
+                                    }
 
                                     // Run TIMER :
                                     Timer.periodic(
