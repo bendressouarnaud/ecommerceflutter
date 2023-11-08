@@ -105,14 +105,14 @@ class _NewsPageState extends State<NewsPage> {
       sound: true,
     );
 
-    print('User granted permission: ${settings.authorizationStatus}');
+    //print('User granted permission: ${settings.authorizationStatus}');
 
 
     if(settings.authorizationStatus == AuthorizationStatus.authorized){
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
 
         //
-        print('Taille DONNEES: ${message.data}');
+        //print('Taille DONNEES: ${message.data}');
         showFlutterNotification(message, "Notification Commande", "");
 
         /*if(message.data.isNotEmpty){
