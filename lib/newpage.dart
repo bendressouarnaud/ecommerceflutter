@@ -26,6 +26,8 @@ import 'httpbeans/beanarticledetail.dart';
 import 'package:badges/badges.dart' as badges;
 
 import 'main.dart';
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 
 
@@ -51,7 +53,7 @@ class _NewsPageState extends State<NewsPage> {
 
 
   // M e t h o d  :
-  void showFlutterNotification(RemoteMessage message) {
+  /*void showFlutterNotification(RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
     if (notification != null && android != null) {
@@ -71,7 +73,7 @@ class _NewsPageState extends State<NewsPage> {
         ),
       );
     }
-  }
+  }*/
 
   @override
   void initState() {
@@ -81,10 +83,53 @@ class _NewsPageState extends State<NewsPage> {
       _achatController.refreshMainInterface();
     });
 
-    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+    //FirebaseMessaging.onMessage.listen(showFlutterNotification);
+    if(defaultTargetPlatform == TargetPlatform.android) {
+      initFire();
+    }
 
     // Init FireBase :
     super.initState();
+  }
+
+  void initFire() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
+
+
+    if(settings.authorizationStatus == AuthorizationStatus.authorized){
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+
+        //
+        print('Taille DONNEES: ${message.data}');
+        showFlutterNotification(message, "Notification Commande", "");
+
+        /*if(message.data.isNotEmpty){
+          Fluttertoast.showToast(
+              msg: "Donnée : ${ message.data['viande'] }",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        }*/
+
+      });
+    }
+
   }
 
   // Get Products :

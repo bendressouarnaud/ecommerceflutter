@@ -42,7 +42,7 @@ Future<http.Client> getSSLPinningClient() async {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await setupFlutterNotifications();
-  showFlutterNotification(message);
+  showFlutterNotification(message, "", "");
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   print('Handling a background message ${message.messageId}');
@@ -58,10 +58,10 @@ Future<void> setupFlutterNotifications() async {
     return;
   }
   channel = const AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
+    'NOTIF', // id
+    'Information', // title
     description:
-    'This channel is used for important notifications.', // description
+    'Statut de la commande', // description
     importance: Importance.high,
   );
 
@@ -86,14 +86,14 @@ Future<void> setupFlutterNotifications() async {
 }
 
 
-void showFlutterNotification(RemoteMessage message) {
+void showFlutterNotification(RemoteMessage message, String titre, String contenu) {
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
   if (notification != null && android != null && !kIsWeb) {
     flutterLocalNotificationsPlugin.show(
       notification.hashCode,
-      notification.title,
-      notification.body,
+      titre,//notification.title,
+      contenu,//notification.body,
       NotificationDetails(
         android: AndroidNotificationDetails(
           channel.id,
