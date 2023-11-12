@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,12 +8,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/beanproduit.dart';
 import 'package:newecommerce/getxcontroller/getusercontroller.dart';
 import 'package:newecommerce/panier.dart';
 import 'package:newecommerce/recherche.dart';
 import 'package:newecommerce/skeleton.dart';
 import 'package:shimmer/shimmer.dart';
+import 'article.dart';
 import 'carouselcustom.dart';
 import 'constants.dart';
 import 'package:http/http.dart';
@@ -50,9 +53,18 @@ class _NewsPageState extends State<NewsPage> {
   final UserGetController _userController = Get.put(UserGetController());
   //
   late https.Client client;
+  final customColor = const Color(0xFFDEDDE3);
 
 
   // M e t h o d  :
+  String formatPrice(int price){
+    MoneyFormatter fmf = MoneyFormatter(
+        amount: price.toDouble()
+    );
+    //
+    return fmf.output.withoutFractionDigits;
+  }
+
   /*void showFlutterNotification(RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
@@ -303,12 +315,508 @@ class _NewsPageState extends State<NewsPage> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    Container(
+                      height: 240,//810,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              // Display
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return ArticleEcran.setId(bl[0].idart, 0, 0, client);
+                                  })
+                              );
+                            },
+                            child: Container(
+                              width: (MediaQuery.of(context).size.width/2) -10,
+                              color: customColor,
+                              margin: const EdgeInsets.all(5),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(5),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 160,
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${bl[0].lienweb}?alt=media",
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => const CircularProgressIndicator(
+                                            color: Colors.amber,
+                                          ),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                                        )
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.amber[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(bl[0].libelle.length > 23 ?
+                                      "${bl[0].libelle.substring(0,17)} ..." : bl[0].libelle,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold
+                                          )
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.red[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("${formatPrice(bl[0].prix)} FCFA",
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Container(
+                                      //color: Colors.blue[100],
+                                      height: 18,
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text("${bl[0].articlerestant} élément(s) restant(s)",
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(
+                                              fontSize: 12
+                                          ),
+                                        ),
+                                      ),
+                                    )
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              // Display
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return ArticleEcran.setId(bl[1].idart, 0, 0, client);
+                                  })
+                              );
+                            },
+                            child: Container(
+                              width: (MediaQuery.of(context).size.width/2) -10,
+                              color: customColor,
+                              margin: const EdgeInsets.all(5),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(5),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 160,
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${bl[1].lienweb}?alt=media",
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => const CircularProgressIndicator(
+                                            color: Colors.amber,
+                                          ),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                                        )
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.amber[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(bl[1].libelle.length > 23 ?
+                                      "${bl[1].libelle.substring(0,17)} ..." : bl[1].libelle,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold
+                                          )
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.red[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("${formatPrice(bl[1].prix)} FCFA",
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Container(
+                                      //color: Colors.blue[100],
+                                      height: 18,
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text("${bl[1].articlerestant} élément(s) restant(s)",
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(
+                                              fontSize: 12
+                                          ),
+                                        ),
+                                      ),
+                                    )
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 240,//810,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              // Display
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return ArticleEcran.setId(bl[2].idart, 0, 0, client);
+                                  })
+                              );
+                            },
+                            child: Container(
+                              width: (MediaQuery.of(context).size.width/2) -10,
+                              color: customColor,
+                              margin: const EdgeInsets.all(5),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(5),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 160,
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${bl[2].lienweb}?alt=media",
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => const CircularProgressIndicator(
+                                            color: Colors.amber,
+                                          ),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                                        )
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.amber[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(bl[2].libelle.length > 23 ?
+                                      "${bl[2].libelle.substring(0,17)} ..." : bl[2].libelle,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold
+                                          )
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.red[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("${formatPrice(bl[2].prix)} FCFA",
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Container(
+                                      //color: Colors.blue[100],
+                                      height: 18,
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text("${bl[2].articlerestant} élément(s) restant(s)",
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(
+                                              fontSize: 12
+                                          ),
+                                        ),
+                                      ),
+                                    )
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              // Display
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return ArticleEcran.setId(bl[3].idart, 0, 0, client);
+                                  })
+                              );
+                            },
+                            child: Container(
+                              width: (MediaQuery.of(context).size.width/2) -10,
+                              color: customColor,
+                              margin: const EdgeInsets.all(5),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(5),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 160,
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${bl[3].lienweb}?alt=media",
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => const CircularProgressIndicator(
+                                            color: Colors.amber,
+                                          ),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                                        )
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.amber[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(bl[3].libelle.length > 23 ?
+                                      "${bl[3].libelle.substring(0,17)} ..." : bl[3].libelle,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold
+                                          )
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.red[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("${formatPrice(bl[3].prix)} FCFA",
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Container(
+                                      //color: Colors.blue[100],
+                                      height: 18,
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text("${bl[3].articlerestant} élément(s) restant(s)",
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(
+                                              fontSize: 12
+                                          ),
+                                        ),
+                                      ),
+                                    )
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 240,//810,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              // Display
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return ArticleEcran.setId(bl[4].idart, 0, 0, client);
+                                  })
+                              );
+                            },
+                            child: Container(
+                              width: (MediaQuery.of(context).size.width/2) -10,
+                              color: customColor,
+                              margin: const EdgeInsets.all(5),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(5),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 160,
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${bl[4].lienweb}?alt=media",
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => const CircularProgressIndicator(
+                                            color: Colors.amber,
+                                          ),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                                        )
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.amber[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(bl[4].libelle.length > 23 ?
+                                      "${bl[4].libelle.substring(0,17)} ..." : bl[4].libelle,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold
+                                          )
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.red[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("${formatPrice(bl[4].prix)} FCFA",
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Container(
+                                      //color: Colors.blue[100],
+                                      height: 18,
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text("${bl[4].articlerestant} élément(s) restant(s)",
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(
+                                              fontSize: 12
+                                          ),
+                                        ),
+                                      ),
+                                    )
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              // Display
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return ArticleEcran.setId(bl[5].idart, 0, 0, client);
+                                  })
+                              );
+                            },
+                            child: Container(
+                              width: (MediaQuery.of(context).size.width/2) -10,
+                              color: customColor,
+                              margin: const EdgeInsets.all(5),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(5),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 160,
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${bl[5].lienweb}?alt=media",
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ),
+                                          placeholder: (context, url) => const CircularProgressIndicator(
+                                            color: Colors.amber,
+                                          ),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                                        )
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.amber[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(bl[5].libelle.length > 23 ?
+                                      "${bl[5].libelle.substring(0,17)} ..." : bl[5].libelle,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold
+                                          )
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 18,
+                                      //color: Colors.red[100],
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("${formatPrice(bl[5].prix)} FCFA",
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Container(
+                                      //color: Colors.blue[100],
+                                      height: 18,
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text("${bl[5].articlerestant} élément(s) restant(s)",
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(
+                                              fontSize: 12
+                                          ),
+                                        ),
+                                      ),
+                                    )
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+
+                    /*SizedBox(
                       height: 770,//810,
                       //color: Colors.amber,
                       width: MediaQuery.of(context).size.width,
                       child: GridViewLastProduct(liste: bl, client: client),
-                    )
+                    )*/
                   ],
                 );
               } else {
