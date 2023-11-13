@@ -258,16 +258,19 @@ class _NewsPageState extends State<NewsPage> {
               })
           ),
           IconButton(
-              onPressed: (){
+            onPressed: (){
+              if(_achatController.taskData.isNotEmpty) {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) {
-                      return SearchEcran(client: client);
-                    }
+                    MaterialPageRoute(builder: (context)
+                      {
+                        return SearchEcran(client: client);
+                      }
                     )
                 );
-              },
-              icon: const Icon(Icons.search, color: Colors.black)
+              }
+            },
+            icon: const Icon(Icons.search, color: Colors.black)
           )
         ],
       ),
