@@ -275,119 +275,132 @@ class _NewPanier extends State<Paniercran> {
                                   alignment: Alignment.centerRight,
                                   child: GestureDetector(
                                     onTap: () {
-                                      showDialog(
-                                        //barrierDismissible: false,
-                                          context: context,
-                                          builder: (BuildContext ctP) {
-                                            dialogContextPaiement = ctP;
-                                            return AlertDialog(
-                                                title: const Text('Mode de paiement',
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                content: Container(
-                                                  height: 130,
-                                                  child: Column(
-                                                    children: [
-                                                      GetBuilder<AchatGetController>(
-                                                          builder: (_) {
-                                                            return ListTile(
-                                                              title: const Text('À la livraison'),
-                                                              leading: Radio(
-                                                                value: 0,
-                                                                groupValue: choixpaiement,
-                                                                onChanged: (int? v) {
-                                                                  choixpaiement = v!;
-                                                                  _achatController.setFlag(choixpaiement);
-                                                                },
-                                                              ),
-                                                            );
-                                                          }
-                                                      ),
-                                                      GetBuilder<AchatGetController>(
-                                                          builder: (_) {
-                                                            return ListTile(
-                                                              enabled: false,
-                                                              title: const Text('Mobile Money'),
-                                                              leading: Radio(
-                                                                value: 1,
-                                                                groupValue: choixpaiement,
-                                                                onChanged: (int? v) {
-                                                                  choixpaiement = v!;
-                                                                  _achatController.setFlag(choixpaiement);
-                                                                },
-                                                              ),
-                                                            );
-                                                          }
-                                                      )
-                                                    ],
+                                      if(usr != null){
+                                        showDialog(
+                                          //barrierDismissible: false,
+                                            context: context,
+                                            builder: (BuildContext ctP) {
+                                              dialogContextPaiement = ctP;
+                                              return AlertDialog(
+                                                  title: const Text('Mode de paiement',
+                                                    textAlign: TextAlign.center,
                                                   ),
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    onPressed: () => Navigator.pop(dialogContextPaiement,'Cancel'),//Navigator.pop(context, 'Cancel'),
-                                                    child: const Text('Annuler'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-
-                                                      // Close the previous :
-                                                      Navigator.pop(dialogContextPaiement, 'OK');
-
-                                                      showDialog(
-                                                        //barrierDismissible: false,
-                                                          context: contextMain,
-                                                          builder: (BuildContext ctI) {
-                                                            dialogContextWaiting = ctI;
-                                                            return const AlertDialog(
-                                                                title: Text('Information'),
-                                                                content: Text("Veuillez patienter ...")
-                                                            );
-                                                          }
-                                                      );
-
-                                                      // Send DATA :
-                                                      flagSendData = true;
-                                                      sendbooking();
-
-                                                      var cpt = 0;
-
-                                                      // Run TIMER :
-                                                      Timer.periodic(
-                                                        const Duration(seconds: 1),
-                                                            (timer) {
-                                                          // Update user about remaining time
-                                                          if((++cpt > 5) || !flagSendData){
-                                                            Navigator.pop(dialogContextWaiting);
-                                                            timer.cancel();
-                                                            if(cpt > 5){
-                                                              Fluttertoast.showToast(
-                                                                  msg: "Impossible de traiter l'opération !",
-                                                                  toastLength: Toast.LENGTH_SHORT,
-                                                                  gravity: ToastGravity.CENTER,
-                                                                  timeInSecForIosWeb: 1,
-                                                                  backgroundColor: Colors.red,
-                                                                  textColor: Colors.white,
-                                                                  fontSize: 16.0
+                                                  content: Container(
+                                                    height: 130,
+                                                    child: Column(
+                                                      children: [
+                                                        GetBuilder<AchatGetController>(
+                                                            builder: (_) {
+                                                              return ListTile(
+                                                                title: const Text('À la livraison'),
+                                                                leading: Radio(
+                                                                  value: 0,
+                                                                  groupValue: choixpaiement,
+                                                                  onChanged: (int? v) {
+                                                                    choixpaiement = v!;
+                                                                    _achatController.setFlag(choixpaiement);
+                                                                  },
+                                                                ),
                                                               );
-                                                              /*var snackBar = const SnackBar(content: Text('Impossible de traiter l\'opération !'));
-                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
                                                             }
-
-                                                            // Kill ACTIVITY :
-                                                            if(Navigator.canPop(contextMain)){
-                                                              Navigator.pop(contextMain);
+                                                        ),
+                                                        GetBuilder<AchatGetController>(
+                                                            builder: (_) {
+                                                              return ListTile(
+                                                                enabled: false,
+                                                                title: const Text('Mobile Money'),
+                                                                leading: Radio(
+                                                                  value: 1,
+                                                                  groupValue: choixpaiement,
+                                                                  onChanged: (int? v) {
+                                                                    choixpaiement = v!;
+                                                                    _achatController.setFlag(choixpaiement);
+                                                                  },
+                                                                ),
+                                                              );
                                                             }
-                                                          }
-                                                        },
-                                                      );
-
-                                                    },
-                                                    child: const Text('OK'),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                ]
-                                            );
-                                          }
-                                      );
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () => Navigator.pop(dialogContextPaiement,'Cancel'),//Navigator.pop(context, 'Cancel'),
+                                                      child: const Text('Annuler'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {
+
+                                                        // Close the previous :
+                                                        Navigator.pop(dialogContextPaiement, 'OK');
+
+                                                        showDialog(
+                                                          //barrierDismissible: false,
+                                                            context: contextMain,
+                                                            builder: (BuildContext ctI) {
+                                                              dialogContextWaiting = ctI;
+                                                              return const AlertDialog(
+                                                                  title: Text('Information'),
+                                                                  content: Text("Veuillez patienter ...")
+                                                              );
+                                                            }
+                                                        );
+
+                                                        // Send DATA :
+                                                        flagSendData = true;
+                                                        sendbooking();
+
+                                                        var cpt = 0;
+
+                                                        // Run TIMER :
+                                                        Timer.periodic(
+                                                          const Duration(seconds: 1),
+                                                              (timer) {
+                                                            // Update user about remaining time
+                                                            if((++cpt > 5) || !flagSendData){
+                                                              Navigator.pop(dialogContextWaiting);
+                                                              timer.cancel();
+                                                              if(cpt > 5){
+                                                                Fluttertoast.showToast(
+                                                                    msg: "Impossible de traiter l'opération !",
+                                                                    toastLength: Toast.LENGTH_SHORT,
+                                                                    gravity: ToastGravity.CENTER,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    backgroundColor: Colors.red,
+                                                                    textColor: Colors.white,
+                                                                    fontSize: 16.0
+                                                                );
+                                                                /*var snackBar = const SnackBar(content: Text('Impossible de traiter l\'opération !'));
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
+                                                              }
+
+                                                              // Kill ACTIVITY :
+                                                              if(Navigator.canPop(contextMain)){
+                                                                Navigator.pop(contextMain);
+                                                              }
+                                                            }
+                                                          },
+                                                        );
+
+                                                      },
+                                                      child: const Text('OK'),
+                                                    ),
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      }
+                                      else{
+                                        Fluttertoast.showToast(
+                                            msg: "Veuillez créer votre compte !",
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 3,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0
+                                        );
+                                      }
                                     },
                                     child: const Text('PAYER',
                                       style: TextStyle(
