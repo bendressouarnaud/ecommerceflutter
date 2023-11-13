@@ -11,6 +11,7 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as https;
 import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/detail.dart';
+import 'package:newecommerce/recherche.dart';
 
 import 'article.dart';
 import 'constants.dart';
@@ -100,12 +101,20 @@ class ProduitEcran extends StatelessWidget{
             )
         ),
         actions: [
-          IconButton(
+          /*IconButton(
               onPressed: (){},
               icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black,)
-          ),
+          ),*/
           IconButton(
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return SearchEcran(client: client!);
+                    }
+                    )
+                );
+              },
               icon: const Icon(Icons.search, color: Colors.black)
           )
         ],
@@ -158,7 +167,7 @@ class ProduitEcran extends StatelessWidget{
                                   child: Text(listeSousProduit[index].libelle,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20,
+                                        fontSize: 16,
                                         color: Colors.white,
                                         //backgroundColor: Colors.grey
                                       )),

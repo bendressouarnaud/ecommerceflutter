@@ -191,7 +191,9 @@ class _NewAuth extends State<AuthentificationEcran> {
                                 style: TextStyle(
                                     color: Colors.white
                                 )),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                             icon: const Icon(
                               Icons.arrow_back_ios_new,
                               size: 20,

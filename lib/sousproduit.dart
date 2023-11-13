@@ -12,6 +12,7 @@ import 'package:http/http.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/panier.dart';
+import 'package:newecommerce/recherche.dart';
 import 'package:newecommerce/repositories/achat_repository.dart';
 import 'package:newecommerce/repositories/article_repository.dart';
 import 'package:newecommerce/repositories/user_repository.dart';
@@ -240,7 +241,15 @@ class _NewSousproduit extends State<Sousproduitecran> {
                 })
             ),
             IconButton(
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return SearchEcran(client: client!);
+                      }
+                      )
+                  );
+                },
                 icon: const Icon(Icons.search, color: Colors.black)
             )
           ],

@@ -14,10 +14,11 @@ class User {
   final String adresse;
   final String fcmtoken;
   final String pwd;
+  final String codeinvitation;
 
   // M e t h o d s  :
   User({required this.idcli, required this.commune, required this.genre, required this.nom, required this.prenom, required this.email, required this.numero,
-    required this.adresse, required this.fcmtoken, required this.pwd});
+    required this.adresse, required this.fcmtoken, required this.pwd, required this.codeinvitation});
   factory User.fromDatabaseJson(Map<String, dynamic> data) => User(
     //This will be used to convert JSON objects that
     //are coming from querying the database and converting
@@ -32,6 +33,7 @@ class User {
     adresse: data['adresse'],
     fcmtoken: data['fcmtoken'],
     pwd: data['pwd'],
+    codeinvitation: data['codeinvitation'],
   );
 
   Map<String, dynamic> toDatabaseJson() => {
@@ -47,5 +49,6 @@ class User {
     "adresse": adresse,
     "fcmtoken": fcmtoken,
     "pwd": pwd,
+    "codeinvitation": codeinvitation,
   };
 }

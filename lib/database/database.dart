@@ -37,7 +37,7 @@ class DatabaseHelper {
 
   // SQL string to create the database
   Future _onCreate(Database db, int version) async {
-    await db.execute('CREATE TABLE user (idcli INTEGER PRIMARY KEY,commune INTEGER,genre INTEGER,nom TEXT,prenom TEXT,email TEXT,numero TEXT,adresse TEXT,fcmtoken TEXT,pwd TEXT)');
+    await db.execute('CREATE TABLE user (idcli INTEGER PRIMARY KEY,commune INTEGER,genre INTEGER,nom TEXT,prenom TEXT,email TEXT,numero TEXT,adresse TEXT,fcmtoken TEXT,pwd TEXT, codeinvitation TEXT)');
     await db.execute('CREATE TABLE achat (idach INTEGER PRIMARY KEY AUTOINCREMENT,idart INTEGER,actif INTEGER)');
     await db.execute('CREATE TABLE article (idart INTEGER PRIMARY KEY,iddet INTEGER,prix INTEGER, reduction INTEGER, note INTEGER, articlerestant INTEGER, libelle TEXT, lienweb TEXT)');
     //await db.execute('CREATE TABLE user (id INTEGER PRIMARY KEY,name TEXT NOT NULL,pwd TEXT NOT NULL)');

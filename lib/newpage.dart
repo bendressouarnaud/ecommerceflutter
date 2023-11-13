@@ -117,8 +117,6 @@ class _NewsPageState extends State<NewsPage> {
       sound: true,
     );
 
-    //print('User granted permission: ${settings.authorizationStatus}');
-
 
     if(settings.authorizationStatus == AuthorizationStatus.authorized){
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -264,7 +262,7 @@ class _NewsPageState extends State<NewsPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) {
-                      return SearchEcran();
+                      return SearchEcran(client: client);
                     }
                     )
                 );

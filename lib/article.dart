@@ -10,6 +10,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart';
 import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/panier.dart';
+import 'package:newecommerce/recherche.dart';
 
 import 'constants.dart';
 import 'getxcontroller/getachatcontroller.dart';
@@ -112,17 +113,27 @@ class _NewArticle extends State<ArticleEcran> {
                   },
                 ),
                 child: IconButton(icon: const Icon(Icons.shopping_cart), onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return Paniercran(client: client);
-                      }
-                      )
-                  );
+                  if(_achatController.taskData.isNotEmpty){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return Paniercran(client: client);
+                        }
+                        )
+                    );
+                  }
                 })
             ),
             IconButton(
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return SearchEcran(client: client!);
+                      }
+                      )
+                  );
+                },
                 icon: const Icon(Icons.search, color: Colors.black)
             )
           ],

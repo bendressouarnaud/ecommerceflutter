@@ -43,6 +43,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
   TextEditingController emailController = TextEditingController();
   TextEditingController numeroController = TextEditingController();
   TextEditingController adresseController = TextEditingController();
+  TextEditingController codeController = TextEditingController();
   late bool _isLoading;
   // Initial value :
   var dropdownvalue = "Koumassi";
@@ -84,6 +85,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
           .toList();
 
       // Update COMMUNE :
+      codeController = TextEditingController(text: _userController.userData.isNotEmpty ? _userController.userData[0].codeinvitation : '');
       nomController = TextEditingController(text: _userController.userData.isNotEmpty ? _userController.userData[0].nom : '');
       prenomController = TextEditingController(text: _userController.userData.isNotEmpty ? _userController.userData[0].prenom : '');
       emailController = TextEditingController(text: _userController.userData.isNotEmpty ? _userController.userData[0].email : '');
@@ -131,7 +133,8 @@ class _NewCreationState extends State<EcranCreationCompte> {
           "adresse": adresseController.text,
           "genre": genre,
           "fcmtoken": _userController.userData.isEmpty ? getToken : "",
-          "pwd": ""
+          "pwd": "",
+          "codeinvitation": codeController.text,
         }));
 
     // Checks :
@@ -216,7 +219,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
                       children: <Widget>[
                         Flexible(
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.only(left: 10, right: 5, top: 10),
                             child: TextField(
                               controller: nomController,
                               decoration: const InputDecoration(
@@ -228,7 +231,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
                         ),
                         Flexible(
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.only(left: 5, right: 10, top: 10),
                             child: TextField(
                               controller: prenomController,
                               decoration: const InputDecoration(
@@ -241,7 +244,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                       child: TextField(
                         controller: emailController,
                         decoration: const InputDecoration(
@@ -251,8 +254,9 @@ class _NewCreationState extends State<EcranCreationCompte> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                       child: TextField(
+                        keyboardType: TextInputType.number,
                         controller: numeroController,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -326,6 +330,18 @@ class _NewCreationState extends State<EcranCreationCompte> {
                             }).toList(),
                           ) ,
                         )
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(10.0),
+                      child: TextField(
+                        enabled: _userController.userData.isNotEmpty ?
+                          _userController.userData[0].codeinvitation.isNotEmpty ? false : true : true,
+                        controller: codeController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Code Invitation (Facultatif)...',
+                        ),
+                      ),
                     ),
                     Expanded(
                       child: Align(

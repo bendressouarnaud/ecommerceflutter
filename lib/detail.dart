@@ -9,6 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:money_formatter/money_formatter.dart';
+import 'package:newecommerce/recherche.dart';
 import 'package:newecommerce/sousproduit.dart';
 
 import 'article.dart';
@@ -100,12 +101,20 @@ class DetailEcran extends StatelessWidget{
             )
         ),
         actions: [
-          IconButton(
+          /*IconButton(
               onPressed: (){},
               icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black,)
-          ),
+          ),*/
           IconButton(
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return SearchEcran(client: client!);
+                    }
+                    )
+                );
+              },
               icon: const Icon(Icons.search, color: Colors.black)
           )
         ],
@@ -160,7 +169,7 @@ class DetailEcran extends StatelessWidget{
                                     child: Text(listeDetail[index].libelle,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 20,
+                                          fontSize: 16,
                                           color: Colors.white,
                                           //backgroundColor: Colors.grey
                                         )),

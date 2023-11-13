@@ -6,12 +6,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:newecommerce/sousproduit.dart';
+import 'package:http/http.dart' as https;
 
 class SearchEcran extends StatefulWidget {
 
   // Attribute
+  final https.Client client;
 
-  SearchEcran({Key? key}) : super(key: key);
+  const SearchEcran({Key? key, required this.client}) : super(key: key);
 
   @override
   State<SearchEcran> createState() => _NewSearch();
@@ -20,11 +22,12 @@ class SearchEcran extends StatefulWidget {
 class _NewSearch extends State<SearchEcran> {
 
   // A T T R I B U T E S
-
+  late https.Client client;
 
   // M E T H O D S
   @override
   void initState() {
+    client = widget.client;
     super.initState();
   }
 
@@ -49,7 +52,7 @@ class _NewSearch extends State<SearchEcran> {
                 onPressed: (){
                   showSearch(
                     context: context,
-                    delegate: LookDelegate()
+                    delegate: LookDelegate.setClient(client)
                   );
                 },
                 icon: const Icon(Icons.search, color: Colors.black)
@@ -64,6 +67,11 @@ class _NewSearch extends State<SearchEcran> {
 
 //
 class LookDelegate extends SearchDelegate{
+  
+  //
+  late https.Client client;
+
+  LookDelegate.setClient(this.client);
 
   // Dummy list
   List<String> searchList = [
@@ -155,7 +163,7 @@ class LookDelegate extends SearchDelegate{
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return Sousproduitecran.setId(5, 0, liste[index]);
+                    return Sousproduitecran.setParams(5, 0, liste[index], client);
                   })
                 );
                 // Show the search results based on the selected suggestion.
@@ -171,7 +179,7 @@ class LookDelegate extends SearchDelegate{
   Future<List<String>> getDataRequested(String query) async {
     if(query.isEmpty || (query.length < 2)) return [];
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/lookforuserrequest');
-    var response = await post(url,
+    var response = await client.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "lib": query,
