@@ -11,6 +11,7 @@ import 'package:http/http.dart';
 import 'package:money_formatter/money_formatter.dart';
 import 'package:newecommerce/panier.dart';
 import 'package:newecommerce/recherche.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'constants.dart';
 import 'getxcontroller/getachatcontroller.dart';
@@ -165,10 +166,20 @@ class _NewArticle extends State<ArticleEcran> {
                                         margin: const EdgeInsets.only(left: 7),
                                         child: Row(
                                           children: [
-                                            const Icon(
-                                              Icons.call,
-                                              color: bottombararticlecolor,
-                                              size: 40,
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  Uri phoneno = Uri.parse('tel:'+article.contact);
+                                                  if (await launchUrl(phoneno)) {
+                                                  //dialer opened
+                                                  }else{
+                                                  //dailer is not opened
+                                                  }
+                                                },
+                                                child: const Icon(
+                                                  Icons.call,
+                                                  color: bottombararticlecolor,
+                                                  size: 40,
+                                                )
                                             ),
                                             const SizedBox(
                                               width: 20,
