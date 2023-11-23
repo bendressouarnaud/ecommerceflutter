@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBRXxiZJ0EM3wwt3Y60HFSrcBICR85TL8A',
-    appId: '1:898747829163:android:3fb2ad5805edfe5f6ba0ee',
+    appId: '1:898747829163:android:4e95c1c0fab1afa66ba0ee',
     messagingSenderId: '898747829163',
     projectId: 'gestionpanneaux',
     databaseURL: 'https://gestionpanneaux.firebaseio.com',
@@ -68,12 +68,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyB4LOCW01cJiPqR2tDRNqTrfAnSZUNOPws',
-    appId: '1:898747829163:ios:21ba1f144e59cd326ba0ee',
+    appId: '1:898747829163:ios:d02f1b0029f695016ba0ee',
     messagingSenderId: '898747829163',
     projectId: 'gestionpanneaux',
     databaseURL: 'https://gestionpanneaux.firebaseio.com',
     storageBucket: 'gestionpanneaux.appspot.com',
     androidClientId: '898747829163-eje1bmtod9nmco6s506j2duui92sodjo.apps.googleusercontent.com',
-    iosBundleId: 'com.example.newecommerce',
+    iosBundleId: 'com.ankk.newecommerce',
   );
 }
