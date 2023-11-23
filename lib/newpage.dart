@@ -832,7 +832,7 @@ class _NewsPageState extends State<NewsPage> {
             },
           ),
         ),
-        _userController.userData.isNotEmpty ? CommandeEcran() :
+        _userController.userData.isNotEmpty ? CommandeEcran.setcli(client) :
         SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,

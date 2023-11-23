@@ -15,17 +15,21 @@ import 'httpbeans/beanarticlehistocommande.dart';
 import 'httpbeans/beancommandeprojection.dart';
 import 'models/user.dart';
 import 'newpage.dart';
+import 'package:http/http.dart' as https;
+
 
 class DetailCommandeEcran extends StatelessWidget {
 
   // A T T R I B U T E S
   final UserRepository _userRepository = UserRepository();
   String dates="", heure="";
+  https.Client? client;
 
 
   // M E T H O D S :
   DetailCommandeEcran({super.key});
   DetailCommandeEcran.setPeriod(this.dates, this.heure);
+  DetailCommandeEcran.setAll(this.dates, this.heure, this.client);
 
 
   // Send Account DATA :
@@ -33,7 +37,7 @@ class DetailCommandeEcran extends StatelessWidget {
     // Pick User Id :
     User? usr = await _userRepository.getConnectedUser();
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getcustomercommandearticle');
-    var response = await post(url,
+    var response = await client!.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "dates": dates,

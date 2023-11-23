@@ -13,11 +13,14 @@ import 'detailcommande.dart';
 import 'httpbeans/beancommandeprojection.dart';
 import 'models/user.dart';
 import 'newpage.dart';
+import 'package:http/http.dart' as https;
 
 class CommandeEcran extends StatelessWidget {
   CommandeEcran({super.key});
+  CommandeEcran.setcli(this.client);
 
   // A T T R I B U T E S
+  https.Client? client;
   final UserRepository _userRepository = UserRepository();
 
 
@@ -28,7 +31,7 @@ class CommandeEcran extends StatelessWidget {
     User? usr = await _userRepository.getConnectedUser();
 
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/getmobilehistoricalcommande');
-    var response = await post(url,
+    var response = await client!.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "idprd": usr!.idcli
@@ -85,7 +88,7 @@ class CommandeEcran extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context){
-                            return DetailCommandeEcran.setPeriod(lt[index].dates, lt[index].heure);
+                            return DetailCommandeEcran.setAll(lt[index].dates, lt[index].heure, client);
                           }
                         )
                     );
