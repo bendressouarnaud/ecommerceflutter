@@ -142,7 +142,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
       //List<dynamic> body = jsonDecode(response.body);
       BeanCustomerCreation bn = BeanCustomerCreation.fromJson(json.decode(response.body));
       if(bn != null){
-        if(bn.leFlag == 2){
+        if(bn.leFlag == 3){
           _userController.addData(bn.leUser);
           /*await _userRepository.insertUser(bn.leUser);
           // Call this :
