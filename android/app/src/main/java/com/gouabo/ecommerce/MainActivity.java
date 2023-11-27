@@ -1,4 +1,4 @@
-package com.ankk.newecommerce;
+package com.gouabo.ecommerce;
 
 import io.flutter.embedding.android.FlutterActivity;
 

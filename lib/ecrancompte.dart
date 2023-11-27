@@ -214,7 +214,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
               const SizedBox(
                 height: 15,
               ),
-              Container(
+              /*Container(
                 height: 40,
                 color: Colors.white,
                 margin: const EdgeInsets.only(right: 7, left: 7),
@@ -297,7 +297,7 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
                       ),
                     ]
                 ),
-              ),
+              ),*/
               const SizedBox(
                 height: 70,
               ),

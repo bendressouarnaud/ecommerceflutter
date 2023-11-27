@@ -124,6 +124,35 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:898747829163:android:3b6c706722696f8a6ba0ee",
+        "android_client_info": {
+          "package_name": "com.gouabo.ecommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898747829163-s20v384lgm0e8mrsnb1fsfh9bs09efv2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRXxiZJ0EM3wwt3Y60HFSrcBICR85TL8A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898747829163-1t6n8onipv5m4b1sqaehobtiltabacii.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:898747829163:android:1dfc2d2bb8cb673b",
         "android_client_info": {
           "package_name": "nakk.ngbandama.testflite"

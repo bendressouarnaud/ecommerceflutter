@@ -16,13 +16,13 @@ if (localPropertiesFile.exists()) {
 //if (flutterVersionCode == null) {
 //    flutterVersionCode = '1'
 //}
-def flutterVersionCode = '2'
+def flutterVersionCode = '1'
 
 //def flutterVersionName = localProperties.getProperty('flutter.versionName')
 //if (flutterVersionName == null) {
 //    flutterVersionName = '1.0'
 //}
-def flutterVersionName = '1.0.1'
+def flutterVersionName = '1.0.0'
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
@@ -31,7 +31,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.ankk.newecommerce"
+    namespace "com.gouabo.ecommerce"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -42,7 +42,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.ankk.newecommerce"
+        applicationId "com.gouabo.ecommerce"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
