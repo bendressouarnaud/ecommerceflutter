@@ -41,4 +41,18 @@ class UserGetController extends GetxController {
     update();
   }
 
+  // Delete USER ACCOUNT :
+  Future<int> deleteUser(int idcli) async{
+    int ret = 0;
+    await _userRepository.deleteUserById(idcli).then((value) => {
+      ret = value
+    });
+
+    // Clean :
+    userData.clear();
+    update();
+
+    return ret;
+  }
+
 }

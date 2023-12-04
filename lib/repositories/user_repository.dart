@@ -14,7 +14,7 @@ class UserRepository {
 
   Future updateUser(User user) => userDao.updateUser(user);
 
-  Future deleteUserById(int id) => userDao.deleteUserById(id);
+  Future<int> deleteUserById(int id) => userDao.deleteUserById(id);
 
   //We are not going to use this in the demo
   //Future deleteAllUsers() => userDao.deleteAllTodos();

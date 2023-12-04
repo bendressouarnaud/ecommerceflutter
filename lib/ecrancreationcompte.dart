@@ -104,7 +104,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
 
   // Process :
   bool checkField(){
-    if(nomController.text.isEmpty || prenomController.text.isEmpty || emailController.text.isEmpty || adresseController.text.isEmpty){
+    if(nomController.text.isEmpty || prenomController.text.isEmpty || emailController.text.isEmpty){
       return true;
     }
     return false;
@@ -131,7 +131,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
           "numero": numeroController.text,
           "commune": commune,
           "adresse": adresseController.text,
-          "genre": genre,
+          "genre": 1, // Set default :
           "fcmtoken": _userController.userData.isEmpty ? getToken : "",
           "pwd": "",
           "codeinvitation": codeController.text,
@@ -294,14 +294,14 @@ class _NewCreationState extends State<EcranCreationCompte> {
                               controller: adresseController,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: 'Adresse...',
+                                labelText: 'Adresse (facultatif)...',
                               ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    Container(
+                    /*Container(
                       margin: const EdgeInsets.only(top: 20, left: 10),
                       child: const Align(
                         alignment: Alignment.topLeft,
@@ -330,7 +330,7 @@ class _NewCreationState extends State<EcranCreationCompte> {
                             }).toList(),
                           ) ,
                         )
-                    ),
+                    ),*/
                     Container(
                       padding: const EdgeInsets.all(10.0),
                       child: TextField(
@@ -393,7 +393,8 @@ class _NewCreationState extends State<EcranCreationCompte> {
                                     // Get 'COMMUNE' id
                                     var idComm = pt.where((d) => d.libelle==dropdownvalue).first.idcom;
                                     // Get 'Genre' id :
-                                    var idGenr = defaultGenre == "M" ? 1 : 0;
+                                    //var idGenr = defaultGenre == "M" ? 1 : 0;
+                                    var idGenr = 1;
                                     showDialog(
                                         barrierDismissible: false,
                                         context: context,

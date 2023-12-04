@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -16,6 +18,8 @@ import 'package:http/http.dart';
 import 'ecrancreationcompte.dart';
 import 'getxcontroller/getusercontroller.dart';
 import 'httpbeans/beanarticledetail.dart';
+import 'httpbeans/beancustomercreation.dart';
+import 'httpbeans/requestbean.dart';
 import 'models/user.dart';
 import 'package:http/http.dart' as https;
 
@@ -42,6 +46,8 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
   //
   final UserGetController _userController = Get.put(UserGetController());
   late https.Client client;
+  late BuildContext dialogContext;
+  bool accountDeletion = false;
 
 
 
@@ -79,6 +85,45 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
       /*var snackBar = const SnackBar(content: Text('PAUSE'));
       // Step 3
       ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
+    }
+  }
+
+  // Delete ACHAT
+  void deleteAccount() async {
+    final url = Uri.parse(
+        '${dotenv.env['URL']}backendcommerce/deleteaccountfromphone');
+    // client.
+    var response = await client.post(url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "id": _userController.userData.isNotEmpty ? _userController.userData[0].idcli : 0,
+          "lib": 'deletion',
+        }));
+
+    // Checks :
+    if (response.statusCode == 200) {
+      //List<dynamic> body = jsonDecode(response.body);
+      RequestBean rn = RequestBean.fromJson(jsonDecode(const Utf8Decoder().convert(response.bodyBytes)));
+      if (rn != null) {
+        if (rn.id == 1) {
+          // Clear the USER's ACCOUNT :
+          await _userController.deleteUser(_userController.userData[0].idcli);
+        }
+        else {
+          Fluttertoast.showToast(
+              msg: "Suppression du compte imposible !",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        }
+      }
+
+      // Set FLAG :
+      accountDeletion = false;
     }
   }
 
@@ -324,6 +369,89 @@ class _NewEcranState extends State<EcranCompte> with WidgetsBindingObserver {
                     ) : Container();
                   },
                 )
+              ),
+              Container(
+                  alignment: Alignment.center,
+                  child: GetBuilder<UserGetController>(
+                    builder: (_) {
+                      return _userController.userData.isNotEmpty ? GestureDetector(
+                        onTap: () {
+                          if(!accountDeletion) {
+                            // Display
+                            showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  dialogContext = context;
+                                  return AlertDialog(
+                                      title: const Text('Information'),
+                                      content: const Text(
+                                          "Confirmer la suppression de votre compte ?"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('NON'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            // Send DATA :
+                                            accountDeletion = true;
+                                            deleteAccount();
+
+                                            // Run TIMER :
+                                            Timer.periodic(
+                                              const Duration(seconds: 1),
+                                                  (timer) {
+                                                // Update user about remaining time
+                                                if (!accountDeletion) {
+                                                  Navigator.pop(dialogContext);
+                                                  timer.cancel();
+
+                                                  // if PANIER is empty, then CLOSE the INTERFACE :
+                                                  if (_userController.userData
+                                                      .isEmpty) {
+                                                    // Kill ACTIVITY :
+                                                    if (Navigator.canPop(
+                                                        context)) {
+                                                      Navigator.pop(context);
+                                                    }
+                                                  }
+                                                  else {
+                                                    setState(() {});
+                                                  }
+                                                }
+                                              },
+                                            );
+                                          },
+                                          child: const Text('OUI'),
+                                        ),
+                                      ]
+                                  );
+                                }
+                            );
+                          }
+                          else{
+                            Fluttertoast.showToast(
+                                msg: "Un processus est en cours ...",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                            );
+                          }
+                        },
+                        child: Text("Supprimez votre compte !",
+                          style: TextStyle(
+                              color: Colors.deepOrange[600],
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ) : Container();
+                    },
+                  )
               )
             ],
           ),
