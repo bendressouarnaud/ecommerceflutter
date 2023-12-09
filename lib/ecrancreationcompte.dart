@@ -380,10 +380,10 @@ class _NewCreationState extends State<EcranCreationCompte> {
                                 onPressed: () {
                                   if(checkField()){
                                     Fluttertoast.showToast(
-                                        msg: "Veuillez renseigner les champs !",
-                                        toastLength: Toast.LENGTH_SHORT,
+                                        msg: "Veuillez renseigner les champs (NOM, PRENOM, EMAIL) !",
+                                        toastLength: Toast.LENGTH_LONG,
                                         gravity: ToastGravity.CENTER,
-                                        timeInSecForIosWeb: 1,
+                                        timeInSecForIosWeb: 3,
                                         backgroundColor: Colors.red,
                                         textColor: Colors.white,
                                         fontSize: 16.0
