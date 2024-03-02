@@ -54,6 +54,7 @@ class _NewAuth extends State<AuthentificationEcran> {
   late https.Client client;
   //
   String? getToken = "";
+  bool user_Company = false;
 
 
 
@@ -101,6 +102,7 @@ class _NewAuth extends State<AuthentificationEcran> {
       BeanCustomerAuth bn = BeanCustomerAuth.fromJson(json.decode(response.body));
       if(bn != null){
         if(bn.flag != 0){
+          if(bn.flag == 2) user_Company = true;
           // Save it :
           _userController.addData(bn.clt);
         }
@@ -263,8 +265,12 @@ class _NewAuth extends State<AuthentificationEcran> {
                                       Navigator.pop(dialogContext);
                                       timer.cancel();
 
-                                      // Kill ACTIVITY :
-                                      if(_userController.userData.isNotEmpty){
+                                      if(user_Company){
+                                        // Kill APPLICATION :
+                                        SystemNavigator.pop();
+                                      }
+                                      else if(_userController.userData.isNotEmpty){
+                                        // Kill ACTIVITY :
                                         if(Navigator.canPop(context)){
                                           Navigator.pop(context);
                                         }

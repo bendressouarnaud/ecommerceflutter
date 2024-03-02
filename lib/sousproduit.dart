@@ -365,7 +365,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                     height: 26,
                                     //color: Colors.deepOrange[100],
                                     margin: const EdgeInsets.only(top: 10),
-                                    child: liste[index].beanarticle.reduction > 0 ? Row(
+                                    child: ((liste[index].beanarticle.reduction > 0) && (liste[index].beanarticle.modepourcentage == 1)) ? Row(
                                       children: [
                                         Text('${formatPrice(liste[index].beanarticle.prix)} FCFA',
                                             style: const TextStyle(
@@ -378,12 +378,19 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                         Text('-${liste[index].beanarticle.reduction}%',
                                             style: const TextStyle(
                                                 color: promotioncolor,
-                                              fontWeight: FontWeight.bold
+                                                fontWeight: FontWeight.bold
                                             )
                                         )
                                       ],
                                     ) :
-                                    Container(height: 10,),
+                                    ((liste[index].beanarticle.reduction > 0) && (liste[index].beanarticle.modepourcentage == 0)) ?
+                                    Text('${liste[index].beanarticle.reduction} article(s) à partir de ${formatPrice(liste[index].beanarticle.prixpromo)} F',
+                                        style: const TextStyle(
+                                            color: promotioncolor,
+                                            fontWeight: FontWeight.bold
+                                        )
+                                    ) :
+                                    Container(height: 25,),
                                   ),
                                   Container(
                                     height: 26,
@@ -401,7 +408,7 @@ class _NewSousproduit extends State<Sousproduitecran> {
                                     height: 26,
                                     //color: Colors.yellow[100],
                                     alignment: Alignment.topLeft,
-                                    child: Row(
+                                    child: const Row(
                                       children: [
                                         Icon(
                                             Icons.star_outline

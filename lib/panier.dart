@@ -527,7 +527,8 @@ class _NewPanier extends State<Paniercran> {
                                                                   //color: Colors.blue[100],
                                                                   alignment: Alignment.topLeft,
                                                                   height: 25,
-                                                                  child: Text('${ formatPrice(liste[index].reduction > 0 ?
+                                                                  child: Text('${ formatPrice(
+                                                                      ((liste[index].reduction > 0) && (liste[index].modepourcentage == 1)) ?
                                                                   (liste[index].prix-
                                                                       ((liste[index].prix * liste[index].reduction)/100)).toInt() :
                                                                   liste[index].prix)} FCFA',
@@ -541,7 +542,7 @@ class _NewPanier extends State<Paniercran> {
                                                                   //color: Colors.red[100],
                                                                   height: 25,
                                                                   margin: const EdgeInsets.only(top: 10),
-                                                                  child: liste[index].reduction > 0 ? Row(
+                                                                  child: ((liste[index].reduction > 0) && (liste[index].modepourcentage == 1)) ? Row(
                                                                     children: [
                                                                       Text('${formatPrice(liste[index].prix)} FCFA',
                                                                           style: const TextStyle(
@@ -558,6 +559,13 @@ class _NewPanier extends State<Paniercran> {
                                                                           )
                                                                       )
                                                                     ],
+                                                                  ) :
+                                                                  ((liste[index].reduction > 0) && (liste[index].modepourcentage == 0)) ?
+                                                                  Text('${liste[index].reduction} article(s) à partir de ${formatPrice(liste[index].prixpromo)} F',
+                                                                      style: const TextStyle(
+                                                                          color: promotioncolor,
+                                                                          fontWeight: FontWeight.bold
+                                                                      )
                                                                   ) :
                                                                   Container(height: 25,),
                                                                 ),

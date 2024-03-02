@@ -9,12 +9,14 @@ class Beanarticledatahistory{
   final int prix, reduction, nombrearticle, autorisecommentaire, commentaireexiste, iddet, note, trackVetement, taille;
   final List<Imagesupplement> images;
   final List<BeanCommentaireContenu> comments;
+  final int modepourcentage, prixpromo;
 
 
   // M e t h o d s
   Beanarticledatahistory({required this.article, required this.entreprise, required this.modaliteretour, required this.descriptionproduit, required this.contact
     , required this.prix, required this.reduction, required this.nombrearticle, required this.autorisecommentaire, required this.commentaireexiste, required this.iddet
-    ,required this.note, required this.trackVetement, required this.taille, required this.images, required this.comments});
+    ,required this.note, required this.trackVetement, required this.taille, required this.images, required this.comments,
+  required this.modepourcentage, required this.prixpromo});
 
   factory Beanarticledatahistory.fromJson(Map<String, dynamic> json) {
     return Beanarticledatahistory(
@@ -32,6 +34,8 @@ class Beanarticledatahistory{
         note: json['note'],
         trackVetement: json['trackVetement'],
         taille: json['taille'],
+        modepourcentage: json['modepourcentage'],
+        prixpromo: json['prixpromo'],
         images: List<dynamic>.from(json['images']).map((i) => Imagesupplement.fromJson(i)).toList(),
         comments: List<dynamic>.from(json['comments']).map((i) => BeanCommentaireContenu.fromJson(i)).toList(),
     );

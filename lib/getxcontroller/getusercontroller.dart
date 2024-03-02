@@ -16,16 +16,18 @@ class UserGetController extends GetxController {
   // M E T H O D S :
   @override
   void onInit() {
-    _getData();
+    findConnectedUser();
     super.onInit();
   }
 
-  void _getData() {
-    _userRepository.getConnectedUser().then((v) {
+  Future<User?> getData() {
+    return _userRepository.findConnectedUser();
+  }
+
+  void findConnectedUser() {
+    _userRepository.findConnectedUser().then((v) {
       if(v != null){
         userData.add(v);
-        /*userData.add(User( idcli: v.idcli, commune: v.commune, genre: v.genre, nom: v.nom, prenom: v.prenom
-        , email: v.email, numero: v.numero, adresse: v.adresse, fcmtoken: v.fcmtoken, pwd: v.pwd));*/
       }
     });
   }

@@ -24,12 +24,14 @@ class DetailCommandeEcran extends StatelessWidget {
   final UserRepository _userRepository = UserRepository();
   String dates="", heure="";
   https.Client? client;
+  int idcli = 0;
 
 
   // M E T H O D S :
   DetailCommandeEcran({super.key});
   DetailCommandeEcran.setPeriod(this.dates, this.heure);
   DetailCommandeEcran.setAll(this.dates, this.heure, this.client);
+  DetailCommandeEcran.setAllNew(this.dates, this.heure, this.client, this.idcli);
 
 
   // Send Account DATA :
@@ -42,7 +44,7 @@ class DetailCommandeEcran extends StatelessWidget {
         body: jsonEncode({
           "dates": dates,
           "heure": heure,
-          "idcli": usr!.idcli
+          "idcli": idcli == 0 ? usr!.idcli : idcli
         }));
     // Checks :
     if(response.statusCode == 200){

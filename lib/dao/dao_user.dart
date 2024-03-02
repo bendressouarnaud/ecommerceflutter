@@ -13,6 +13,12 @@ class UserDao {
     return result;
   }
 
+  Future<int> getTotalUser() async {
+    final db = await dbProvider.database;
+    var results = await db.rawQuery('SELECT * FROM user');
+    return results.length;
+  }
+
   Future<User?> getConnectedUser() async {
     final db = await dbProvider.database;
     var results = await db.rawQuery('SELECT * FROM user');
@@ -23,6 +29,29 @@ class UserDao {
 
     return null;
   }
+
+  Future<User?> findConnectedUser(List<String> columns) async {
+    try {
+      final db = await dbProvider.database;
+      late List<Map<String, dynamic>> result;
+      result = await db.query("user", columns: columns);
+
+      User? user = result.isNotEmpty
+          ? result
+          .map((item) => User.fromDatabaseJson(item))
+          .toList()
+          .first
+          : null;
+      return user;
+    } on Exception catch (e) {
+    // Anything else that is an exception
+    print('Unknown exception: $e');
+    } catch (e) {
+    // No specified type, handles all
+    print('Something really unknown: $e');
+    }
+  }
+
 
   // Get ONE USER :
   Future<List<User>> getCurrentUser(List<String> columns) async{

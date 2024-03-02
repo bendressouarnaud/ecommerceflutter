@@ -1,6 +1,6 @@
 class Beanreponsepanier {
   final String lienweb, libelle;
-  final int idart;
+  final int idart, modepourcentage, prixpromo;
   final int totalcomment, restant, prix, reduction;
   final double note;
 
@@ -12,6 +12,8 @@ class Beanreponsepanier {
     required this.restant,
     required this.lienweb,
     required this.libelle,
+    required this.modepourcentage,
+    required this.prixpromo,
     required this.note
   });
 
@@ -24,6 +26,8 @@ class Beanreponsepanier {
         restant: json['restant'],
         lienweb: json['lienweb'],
         libelle: json['libelle'],
+        modepourcentage: json['modepourcentage'],
+        prixpromo: json['prixpromo'],
         note: json['note']
     );
   }

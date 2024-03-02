@@ -372,16 +372,57 @@ class _NewArticle extends State<ArticleEcran> {
                                       ],
                                     ),
                                   ),
+
+
+
                                   Container(
                                     margin: const EdgeInsets.only(left: 10,right: 10, top: 15),
                                     width: MediaQuery.of(context).size.width,
-                                    child: Text( '${formatPrice(article.prix)} FCFA',
+                                    child: Text( '${ formatPrice(article.reduction > 0 ?
+                                    (article.modepourcentage == 1 ? (article.prix-
+                                        ((article.prix * article.reduction)/100)).toInt() :
+                                      article.prix) : article.prix)} FCFA',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20
                                       ),
                                     ),
                                   ),
+                                  Container(
+                                    //color: Colors.red[100],
+                                    height: 25,
+                                    alignment: Alignment.topLeft,
+                                    margin: const EdgeInsets.only(top: 5, left: 10,right: 10),
+                                    child: ((article.reduction > 0) && (article.modepourcentage == 1)) ? Row(
+                                      children: [
+                                        Text('${formatPrice(article.prix)} FCFA',
+                                            style: const TextStyle(
+                                                decoration: TextDecoration.lineThrough
+                                            )
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text('-${article.reduction}%',
+                                            style: const TextStyle(
+                                                color: promotioncolor,
+                                                fontWeight: FontWeight.bold
+                                            )
+                                        )
+                                      ],
+                                    ) :
+                                    ((article.reduction > 0) && (article.modepourcentage == 0)) ?
+                                    Text('${article.reduction} article(s) à partir de ${formatPrice(article.prixpromo)} FCFA',
+                                        style: const TextStyle(
+                                            color: promotioncolor,
+                                            fontWeight: FontWeight.bold
+                                        )
+                                    ) :
+                                    Container(height: 25,),
+                                  ),
+
+
+
                                   Container(
                                     margin: const EdgeInsets.only(left: 10,right: 10, top: 10),
                                     width: MediaQuery.of(context).size.width,

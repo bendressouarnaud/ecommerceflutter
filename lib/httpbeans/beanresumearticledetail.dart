@@ -1,9 +1,10 @@
 import 'beanarticledetail.dart';
+import 'beanarticledetailnew.dart';
 
 class BeanResumeArticleDetail{
   final int totalcomment;
   final double noteart;
-  final Beanarticledetail beanarticle;
+  final Beanarticledetailnew beanarticle;
 
   // M e t h o d s
   BeanResumeArticleDetail({required this.totalcomment, required this.noteart, required this.beanarticle});
@@ -12,7 +13,7 @@ class BeanResumeArticleDetail{
     return BeanResumeArticleDetail(
         totalcomment: json['totalcomment'],
         noteart: json['noteart'],
-        beanarticle: Beanarticledetail.fromJson(json['beanarticle'])
+        beanarticle: Beanarticledetailnew.fromJson(json['beanarticle'])
     );
   }
 }

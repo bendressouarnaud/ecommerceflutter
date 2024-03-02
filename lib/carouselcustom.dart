@@ -11,6 +11,8 @@ import 'beanproduit.dart';
 import 'httpbeans/beanarticledetail.dart';
 import 'package:http/http.dart' as https;
 
+import 'httpbeans/beanarticlediscounted.dart';
+
 
 class CarouselInterface extends StatelessWidget{
   const CarouselInterface({super.key, required this.liste, required this.client});
@@ -143,6 +145,87 @@ class ProduitInterface extends StatelessWidget{
           ),
         );
       });
+  }
+}
+
+
+class DiscountedProduitInterface extends StatelessWidget{
+
+  const DiscountedProduitInterface({super.key, required this.liste, required this.client});
+  final List<BeanArticleDiscounted> liste;
+  final https.Client client;
+
+  @override
+  Widget build(BuildContext context){
+    return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemCount: liste.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () {
+              // Display
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return ArticleEcran.setId(liste[index].idart, 0, 0, client);
+                  }
+                  ));
+            },
+            child: Container(
+              margin: const EdgeInsets.all(10),
+              width: 130,
+              height: 170,
+
+              child: Column(
+                children: [
+                  Container(
+                      width: 130,
+                      height: 120,
+                      child: CachedNetworkImage(
+                        width: 110,
+                        height: 110,
+                        //fit: BoxFit.fill,
+                        imageUrl: "https://firebasestorage.googleapis.com/v0/b/gestionpanneaux.appspot.com/o/${liste[index].lienweb}?alt=media",
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        placeholder: (context, url) => const CircularProgressIndicator(
+                          color: Colors.amber,
+                        ),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                      )
+                  ),
+                  SizedBox(
+                    height: 20,
+                    child: Text(liste[index].libelle.length > 15 ?
+                    "${liste[index].libelle.substring(0,12)} ..." : liste[index].libelle),
+                  ),
+                  SizedBox(
+                    height: 20,
+                    child: Text(liste[index].modepourcentage == 1 ?
+                    "${liste[index].reduction} %" : "Dès ${liste[index].reduction} articles",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),),
+                  )
+                  /*Expanded(
+                      child: Text(liste[index].libelle,
+                      )
+                  )*/
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
 

@@ -4,7 +4,20 @@ import '../models/user.dart';
 class UserRepository {
   final userDao = UserDao();
 
+  Future<int> getTotalUser() => userDao.getTotalUser();
   Future<User?> getConnectedUser() => userDao.getConnectedUser();
+  Future<User?> findConnectedUser() => userDao.findConnectedUser(["idcli"
+    ,"commune"
+    ,"genre"
+    ,"nom"
+    ,"prenom"
+    ,"email"
+    ,"numero"
+    ,"adresse"
+    ,"fcmtoken"
+    ,"pwd"
+    ,"codeinvitation"
+  ]);
 
   Future getCurrentUser() => userDao.getCurrentUser(["idcli","nom","prenom"]);
 
