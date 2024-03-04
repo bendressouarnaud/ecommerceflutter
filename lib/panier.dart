@@ -58,6 +58,8 @@ class _NewPanier extends State<Paniercran> {
   User? usr;
   late https.Client client;
   late BuildContext dialogContext;
+  int total = 0;
+  int occurence = 0;
 
 
 
@@ -83,6 +85,47 @@ class _NewPanier extends State<Paniercran> {
   }
 
 
+  // 10 - 4
+  void recursifPrix(int total,int seuil, int occurence){
+    if(total >= seuil) {
+      total = total - seuil;
+      this.total = total;
+      if (total >= 0) {
+        occurence++;
+        this.occurence = occurence;
+      }
+      else {
+        recursifPrix(total, seuil, occurence);
+      }
+    }
+  }
+
+
+  // Process the GLOBAL AMOUNT to PAY
+  int processAmount(List<Beanreponsepanier> liste){
+    int prixTotalArticle = 0;
+    for(Beanreponsepanier br in liste){
+      // Get the TOTAL of specific ARTICLE booked :
+      var nbreArt = _achatController.taskData.map((element) => element.idart ==
+          br.idart ? 1 : 0).reduce((value, element) => value + element);
+      // Now, apply logic :
+      if((br.reduction > 0) && (br.modepourcentage == 1)){
+        // Pourcentage :
+        prixTotalArticle += (br.prix - ((br.prix * br.reduction)/100)) as int;
+      }
+      else if((br.reduction > 0) && (br.modepourcentage == 0)){
+        // Nombre article :
+        total = 0;
+        occurence = 0;
+        recursifPrix(nbreArt, br.reduction, 0);
+        prixTotalArticle += (occurence * br.prixpromo) + (total * br.prix);
+      }
+      else{
+        prixTotalArticle += nbreArt * br.prix;
+      }
+    }
+    return prixTotalArticle;
+  }
 
 
   // Display DIALOG Box :
@@ -184,7 +227,7 @@ class _NewPanier extends State<Paniercran> {
         }));
 
     if(response.statusCode == 200){
-      List<dynamic> body = jsonDecode(response.body);
+      List<dynamic> body = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
       List<Beanreponsepanier> posts = body
           .map(
             (dynamic item) => Beanreponsepanier.fromJson(item),
@@ -448,9 +491,7 @@ class _NewPanier extends State<Paniercran> {
                                           Expanded(
                                               child: Align(
                                                   alignment: Alignment.topRight,
-                                                  child: Text('${formatPrice(liste.map((e) => e.reduction > 0 ? (e.prix-
-                                                      ((e.prix * e.reduction)/100)).toInt() :
-                                                  e.prix).toList().reduce((value, element) => value + element))} FCFA',
+                                                  child: Text('${formatPrice( processAmount(liste) )} FCFA',
                                                     style: const TextStyle(
                                                       color: Colors.black,
                                                       fontWeight: FontWeight.bold,
