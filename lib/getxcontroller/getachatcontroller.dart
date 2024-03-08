@@ -25,11 +25,12 @@ class AchatGetController extends GetxController {
   }
 
   // Get Live ACHAT :
-  void findAllLive() {
-    _achatRepository.findAllLive().then((value) => {
-      for (var element in value) {
+  Future<void> findAllLive() async {
+    await _achatRepository.findAllLive().then((value) => {
+      listePanier = value
+      /*for (var element in value) {
         listePanier.add(element)
-      }
+      }*/
     });
   }
 

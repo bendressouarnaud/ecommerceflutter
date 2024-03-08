@@ -48,6 +48,7 @@ class _NewPanier extends State<Paniercran> {
   // A T T R I B U T E S /
   //final _achatRepository = AchatRepository();
   final AchatGetController _achatController = Get.put(AchatGetController());
+  final AchatRepository _achatRepository = AchatRepository();
   final UserRepository _userRepository = UserRepository();
   Modepaiement? _modepaiement = Modepaiement.livraison;
   int choixpaiement = 0;
@@ -60,6 +61,7 @@ class _NewPanier extends State<Paniercran> {
   late BuildContext dialogContext;
   int total = 0;
   int occurence = 0;
+  late List<BeanActif> listeAchat;
 
 
 
@@ -80,6 +82,9 @@ class _NewPanier extends State<Paniercran> {
       if(value > 0){
         // Notify :
         flagDeleteData = false;
+
+        // Refresh :
+        refreshArticle();
       }
     });
   }
@@ -187,6 +192,13 @@ class _NewPanier extends State<Paniercran> {
     );
   }
 
+  // Refresh :
+  void refreshArticle(){
+    _achatRepository.findAllLive().then((value) => {
+      listeAchat = value
+    });
+  }
+
 
   @override
   void initState(){
@@ -199,6 +211,9 @@ class _NewPanier extends State<Paniercran> {
         usr = value;
       }
     });
+
+    // Refresh :
+    refreshArticle();
 
     /*if(usr!=null) {
       Fluttertoast.showToast(
@@ -248,12 +263,12 @@ class _NewPanier extends State<Paniercran> {
 
   // Call to Process PAYMENT :
   sendbooking() async {
-
+    // _achatController.listePanier
     final url = Uri.parse('${dotenv.env['URL']}backendcommerce/sendbooking');
     var response = await client.post(url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          "liste": _achatController.listePanier,
+          "liste": listeAchat,
           "idcli": usr!.idcli,
           "choixpaiement": choixpaiement
         }));
