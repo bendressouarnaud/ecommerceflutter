@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 
@@ -9,7 +10,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/io_client.dart';
+import 'package:newecommerce/repositories/user_repository.dart';
 
+import 'models/user.dart';
 import 'newpage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -127,13 +130,18 @@ Future main() async {
 
   final client = await getSSLPinningClient();
 
-  runApp( MyApp.setClient(client));
+  // Load LOCAL USER :
+  var userRepository = UserRepository();
+  User? usr = await userRepository.getConnectedUser();
+
+  runApp( MyApp.setClient(client, usr));
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-  MyApp.setClient(this.client);
+  MyApp.setClient(this.client, this.usr);
   late http.Client client;
+  User? usr;
 
   // https://medium.flutterdevs.com/explore-shimmer-animation-effect-in-flutter-7b0e46a9c722
   // https://www.digitalocean.com/community/tutorials/flutter-flutter-http
@@ -152,7 +160,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: NewsPage(client: client),
+      home: NewsPage(client: client, mUser: usr),
     );
   }
 }
