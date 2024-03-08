@@ -104,24 +104,28 @@ class _NewPanier extends State<Paniercran> {
   // Process the GLOBAL AMOUNT to PAY
   int processAmount(List<Beanreponsepanier> liste){
     int prixTotalArticle = 0;
-    for(Beanreponsepanier br in liste){
-      // Get the TOTAL of specific ARTICLE booked :
-      var nbreArt = _achatController.taskData.map((element) => element.idart ==
-          br.idart ? 1 : 0).reduce((value, element) => value + element);
-      // Now, apply logic :
-      if((br.reduction > 0) && (br.modepourcentage == 1)){
-        // Pourcentage :
-        prixTotalArticle += (br.prix - ((br.prix * br.reduction)/100)) as int;
-      }
-      else if((br.reduction > 0) && (br.modepourcentage == 0)){
-        // Nombre article :
-        total = 0;
-        occurence = 0;
-        recursifPrix(nbreArt, br.reduction, 0);
-        prixTotalArticle += (occurence * br.prixpromo) + (total * br.prix);
-      }
-      else{
-        prixTotalArticle += nbreArt * br.prix;
+    if(_achatController.taskData.isNotEmpty) {
+      for (Beanreponsepanier br in liste) {
+        // Get the TOTAL of specific ARTICLE booked :
+        var nbreArt = _achatController.taskData.map((element) =>
+        element.idart ==
+            br.idart ? 1 : 0).reduce((value, element) => value + element);
+        // Now, apply logic :
+        if ((br.reduction > 0) && (br.modepourcentage == 1)) {
+          // Pourcentage :
+          prixTotalArticle +=
+          (br.prix - ((br.prix * br.reduction) / 100)) as int;
+        }
+        else if ((br.reduction > 0) && (br.modepourcentage == 0)) {
+          // Nombre article :
+          total = 0;
+          occurence = 0;
+          recursifPrix(nbreArt, br.reduction, 0);
+          prixTotalArticle += (occurence * br.prixpromo) + (total * br.prix);
+        }
+        else {
+          prixTotalArticle += nbreArt * br.prix;
+        }
       }
     }
     return prixTotalArticle;
